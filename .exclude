@@ -1,0 +1,10 @@
+build
+captures
+.gradle
+.idea
+app/build
+app/release
+*.iml
+local.properties
+scripts/node_modules
+scripts/.idea
