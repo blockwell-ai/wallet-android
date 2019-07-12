@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".trainer.suggestions.Step1Fragment"
+    tools:ignore="HardcodedText">
+
+    <TextView
+        style="@style/StepTextStyle"
+        android:layout_marginTop="32dp"
+        android:text="The Suggestions feature lets you add voting to your token." />
+
+    <TextView
+        style="@style/StepTextStyle"
+        android:layout_marginTop="16dp"
+        android:text="A Suggestion can be any idea you want your users to vote on." />
+
+    <TextView
+        style="@style/StepTextStyle"
+        android:layout_marginTop="16dp"
+        android:text="Your Training Token comes with one suggestion pre-built. Here's a list of suggestions currently in your token. Click Next to continue." />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="@string/suggestions_list"/>
+
+    <ai.blockwell.qrdemo.trainer.suggestions.SuggestionsListView
+        android:id="@+id/suggestions_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <ai.blockwell.qrdemo.trainer.BackNextView
+        android:id="@+id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

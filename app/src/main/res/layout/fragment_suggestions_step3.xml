@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".trainer.suggestions.Step1Fragment"
+    tools:ignore="HardcodedText">
+
+    <TextView
+        style="@style/StepTextStyle"
+        android:layout_marginTop="32dp"
+        android:text="Congratulations! You've created a new suggestion. You should see it in the list below." />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="@string/suggestions_list"/>
+
+    <ai.blockwell.qrdemo.trainer.suggestions.SuggestionsListView
+        android:id="@+id/suggestions_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <TextView
+        style="@style/StepTextStyle"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="64dp"
+        android:text="Click Next to see how to vote." />
+
+    <ai.blockwell.qrdemo.trainer.BackNextView
+        android:id="@+id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

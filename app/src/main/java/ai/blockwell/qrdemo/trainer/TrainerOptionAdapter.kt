@@ -1,5 +1,6 @@
 package ai.blockwell.qrdemo.trainer
 
+import ai.blockwell.qrdemo.trainer.suggestions.SuggestionsFragment
 import android.util.Log
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -10,7 +11,9 @@ class TrainerOptionAdapter : RecyclerView.Adapter<TrainerOptionHolder>() {
 
     private var items = listOf(
             TrainerOption("Guided 1: Enable Minting",
-                    "Enable token minting on your Trainer Token and mint more tokens.") { EnableMintingFragment() }
+                    "Enable token minting on your Trainer Token and mint more tokens.") { EnableMintingFragment() },
+            TrainerOption("Guided 2: Suggestions and Voting",
+                    "Add Suggestions users can vote on.") { SuggestionsFragment() }
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = TrainerOptionHolder(TrainerOptionView(parent.context))

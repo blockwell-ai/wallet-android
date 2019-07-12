@@ -63,6 +63,7 @@ class TrainerFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         subscribe()
+        requireActivity().title = "Token Trainer"
     }
 
     override fun onPause() {

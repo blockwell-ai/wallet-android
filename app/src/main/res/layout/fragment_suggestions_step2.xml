@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".trainer.suggestions.Step1Fragment"
+    tools:ignore="HardcodedText">
+
+    <TextView
+        style="@style/StepTextStyle"
+        android:layout_marginTop="32dp"
+        android:text="Let's start by creating a new suggestion in your token." />
+
+    <TextView
+        style="@style/StepTextStyle"
+        android:layout_marginTop="16dp"
+        android:text="Enter text for your suggestion, and click Create Suggestion." />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/value_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+
+        <AutoCompleteTextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Suggestion text"
+            android:imeActionLabel="@string/send"
+            android:inputType="textAutoComplete"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/create"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Create Suggestion" />
+
+    <TextView
+        style="@style/StepTextStyle"
+        android:layout_marginTop="32dp"
+        android:text="Creating a suggestion can take up to 20 seconds." />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <ai.blockwell.qrdemo.trainer.BackNextView
+        android:id="@+id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

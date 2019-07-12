@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".trainer.suggestions.Step1Fragment"
+    tools:ignore="HardcodedText">
+
+    <TextView
+        style="@style/StepTextStyle"
+        android:layout_marginTop="32dp"
+        android:text="Voting is also simple, just select the suggestion you'd like to vote on, and click Vote." />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:spinnerMode="dialog"/>
+
+    <Button
+        android:id="@+id/vote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Vote" />
+
+    <TextView
+        style="@style/StepTextStyle"
+        android:layout_marginTop="32dp"
+        android:text="Voting can take up to 20 seconds." />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <ai.blockwell.qrdemo.trainer.BackNextView
+        android:id="@+id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

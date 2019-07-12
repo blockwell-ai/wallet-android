@@ -91,4 +91,9 @@
     <string name="tokens_minted">Tokens minted.</string>
     <string name="contract_send_failed">Transaction failed</string>
     <string name="enter_valid_amount">Please enter a valid amount</string>
+    <string name="next">NEXT</string>
+    <string name="suggestion_num">Suggestion #%d</string>
+    <string name="back">BACK</string>
+    <string name="suggestions_list">Suggestions List</string>
+    <string name="votes">VOTES</string>
 </resources>

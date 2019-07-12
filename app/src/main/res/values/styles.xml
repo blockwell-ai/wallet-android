@@ -26,4 +26,12 @@
         <item name="android:textColor">@color/colorHelper</item>
         <item name="android:textSize">14sp</item>
     </style>
+
+    <style name="StepTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">32dp</item>
+        <item name="android:paddingRight">32dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
 </resources>
