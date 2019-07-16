@@ -22,22 +22,26 @@ class Step1Fragment : StepFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Configure the bottom back/next buttons for this screen
         buttons.hideBack()
-        load()
-
         buttons.onNextClick {
             model.events.publish(Events.Type.NEXT)
         }
+
+        load()
     }
 
     fun load() {
         scope.launch {
+            // Load the suggestions from the blockchain
             val suggestions = model.getSuggestions()
 
             if (isAdded) {
                 suggestions.fold({
+                    // Success, set the suggestions in the list
                     suggestions_list.setSuggestions(it)
                 }, {
+                    // Failure, show an error
                     requireActivity().alert(R.string.unknown_error).show()
                 })
             }

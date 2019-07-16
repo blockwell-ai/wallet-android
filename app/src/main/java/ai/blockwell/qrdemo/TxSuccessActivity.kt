@@ -1,5 +1,6 @@
 package ai.blockwell.qrdemo
 
+import ai.blockwell.qrdemo.api.ApiClient
 import ai.blockwell.qrdemo.api.Etherscan
 import android.content.Intent
 import android.graphics.Typeface
@@ -12,7 +13,9 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import ai.blockwell.qrdemo.api.TxResponse
 import ai.blockwell.qrdemo.view.ArgumentView
+import ai.blockwell.qrdemo.view.WinningsView
 import ai.blockwell.qrdemo.viewmodel.TxModel
+import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.activity_tx_success.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
@@ -22,6 +25,7 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.textColorResource
 import org.koin.android.architecture.ext.viewModel
+import org.koin.android.ext.android.inject
 
 
 /**
@@ -30,6 +34,7 @@ import org.koin.android.architecture.ext.viewModel
 class TxSuccessActivity : AppCompatActivity() {
     val scope = MainScope()
     val model by viewModel<TxModel>()
+    val client by inject<ApiClient>()
 
     // The parent job for all background work this activity subscribes to
     var job: Job? = null
@@ -90,6 +95,24 @@ class TxSuccessActivity : AppCompatActivity() {
                     status.setText(R.string.confirmed)
                     status.textColorResource = R.color.success
                     progress.visibility = View.INVISIBLE
+
+                    it.events
+                            ?.filterNotNull()
+                            ?.filter { it.event == "ItemDropped" || it.event == "TokenWin" }
+                            ?.let {list ->
+                                if (list.isNotEmpty()) {
+                                    val view = WinningsView(this@TxSuccessActivity, client)
+                                    view.update(list)
+                                    val builder = AlertDialog.Builder(this@TxSuccessActivity)
+
+                                    //setting the view of the builder to our custom view that we already inflated
+                                    builder.setView(view)
+
+                                    //finally creating the alert dialog and displaying it
+                                    val alertDialog = builder.create()
+                                    alertDialog.show()
+                                }
+                            }
                 } else if (it.status == "error") {
                     alert(getString(R.string.transfer_failed) + it.error).show()
                 }

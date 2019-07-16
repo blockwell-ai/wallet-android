@@ -91,11 +91,19 @@ class TransactionStatusChannel(val client: ApiClient, val txId: String) : Corout
 data class TransactionStatusResponse(
         val id: String,
         val status: String,
+        val from: String,
         val error: String?,
         val transactionHash: String?,
-        val network: String?
+        val network: String?,
+        val events: List<LogEvent?>?
 ) {
     object Deserializer : ResponseDeserializable<TransactionStatusResponse> {
         override fun deserialize(content: String) = Gson().fromJson(content, TransactionStatusResponse::class.java)
     }
 }
+
+data class LogEvent(
+        val event: String,
+        val address: String,
+        val returnValues: Map<String, String>
+)
