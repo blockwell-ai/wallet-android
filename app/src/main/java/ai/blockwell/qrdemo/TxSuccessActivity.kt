@@ -78,12 +78,12 @@ class TxSuccessActivity : AppCompatActivity() {
         job?.cancel()
 
         job = scope.launch {
-            model.getTxStatus(txId).channel.consumeEach {
-                it.transactionHash?.let { hash ->
+            model.getTxStatus(txId).channel.consumeEach { tx ->
+                tx.transactionHash?.let { hash ->
                     etherscan.setText(R.string.view_on_etherscan)
                     etherscan.textColorResource = R.color.link
                     etherscan.setOnClickListener {_ ->
-                        val webpage = Uri.parse(Etherscan.tx(it.network, hash))
+                        val webpage = Uri.parse(Etherscan.tx(tx.network, hash))
                         val intent = Intent(Intent.ACTION_VIEW, webpage)
                         if (intent.resolveActivity(packageManager) != null) {
                             startActivity(intent)
@@ -91,18 +91,18 @@ class TxSuccessActivity : AppCompatActivity() {
                     }
                 }
 
-                if (it.status == "completed") {
+                if (tx.status == "completed") {
                     status.setText(R.string.confirmed)
                     status.textColorResource = R.color.success
                     progress.visibility = View.INVISIBLE
 
-                    it.events
+                    tx.events
                             ?.filterNotNull()
                             ?.filter { it.event == "ItemDropped" || it.event == "TokenWin" }
                             ?.let {list ->
                                 if (list.isNotEmpty()) {
                                     val view = WinningsView(this@TxSuccessActivity, client)
-                                    view.update(list)
+                                    view.update(tx.network!!, list)
                                     val builder = AlertDialog.Builder(this@TxSuccessActivity)
 
                                     //setting the view of the builder to our custom view that we already inflated
@@ -113,8 +113,8 @@ class TxSuccessActivity : AppCompatActivity() {
                                     alertDialog.show()
                                 }
                             }
-                } else if (it.status == "error") {
-                    alert(getString(R.string.transfer_failed) + it.error).show()
+                } else if (tx.status == "error") {
+                    alert(getString(R.string.transfer_failed) + tx.error).show()
                 }
             }
         }

@@ -7,12 +7,14 @@ import ai.blockwell.qrdemo.api.Proxy
 import ai.blockwell.qrdemo.api.toDecimals
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatTextView
 import kotlinx.android.synthetic.main.view_winnings.view.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.layoutInflater
+import java.lang.Exception
 
 @SuppressLint("ViewConstructor")
 class WinningsView(context: Context, val client: ApiClient) : FrameLayout(context) {
@@ -28,7 +30,7 @@ class WinningsView(context: Context, val client: ApiClient) : FrameLayout(contex
 
     event TokenWin(address indexed winner, address token, uint256 value);
      */
-    fun update(wins: List<LogEvent>) {
+    fun update(network: String, wins: List<LogEvent>) {
         scope.launch {
             wins.forEach {
                 var symbol = ""
@@ -42,23 +44,16 @@ class WinningsView(context: Context, val client: ApiClient) : FrameLayout(contex
                     value = it.returnValues["value"] ?: "0"
                 }
 
-                when (address.toLowerCase()) {
-                    "0x618e75ac90b12c6049ba3b27f5d5f8651b0037f6" -> {
-                        symbol = "QASH"
-                        decimals = 6
-                    }
-                    "0x085935a183d1653846be497f9dddfa006b1aa6f0" -> {
-                        symbol = "cat food"
-                    }
-                    "0x446d5f845da567a16cc58e7badee19a47e57d3b9" -> {
-                        symbol = "litterbox"
-                    }
-                    "0x9e04f730827d570fc5bc2971a6327be8815a67de" -> {
-                        symbol = "vet visit"
-                    }
-                    "0xe71e85438a770b00019108217f04b5738b7a495e" -> {
-                        symbol = "cat toy"
-                    }
+                try {
+                    symbol = proxy.callAddress(network, address, "erc20", "symbol").get().data.asString
+                } catch (e: Exception) {
+                    Log.e("WinningsView", "Exception in getting symbol for winning", e)
+                }
+
+                try {
+                    decimals = proxy.callAddress(network, address, "erc20", "decimals").get().data.asString.toInt()
+                } catch (e: Exception) {
+                    Log.e("WinningsView", "Exception in getting decimals for winning", e)
                 }
 
                 val view = AppCompatTextView(context)

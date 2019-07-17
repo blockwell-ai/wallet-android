@@ -38,6 +38,15 @@ class Proxy(val client: ApiClient) {
             it.data
         }
     }
+
+    suspend fun callAddress(network: String, address: String, type: String, method: String, args: List<String> = listOf()) = withContext(Dispatchers.Default) {
+
+        val query = "type=$type" + args.map { "arg=" + Uri.encode(it) }.joinToString("&")
+
+        val response = client.getWithAuth("api/proxy/contracts/direct/$network/$address/call/$method?$query", DataStore.accessToken, CallResponse.Deserializer)
+
+        response
+    }
 }
 
 data class CallResponse(

@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.animation.DecelerateInterpolator
 import androidx.core.view.doOnLayout
 import com.google.android.material.snackbar.Snackbar
+import com.takusemba.spotlight.OnSpotlightStateChangedListener
 import com.takusemba.spotlight.Spotlight
 import com.takusemba.spotlight.shape.Circle
 import com.takusemba.spotlight.target.SimpleTarget
@@ -38,6 +39,7 @@ class WalletActivity : AppCompatActivity() {
 
     // The parent job for all background work this activity subscribes to
     var job: Job? = null
+    var spotlight = false
 
     lateinit var adapter: TransferAdapter
 
@@ -85,8 +87,18 @@ class WalletActivity : AppCompatActivity() {
                 Spotlight.with(this)
                         .setOverlayColor(R.color.overlay)
                         .setAnimation(DecelerateInterpolator(2f))
+                        .setDuration(500)
                         .setTargets(target)
                         .setClosedOnTouchedOutside(true)
+                        .setOnSpotlightStateListener(object : OnSpotlightStateChangedListener {
+                            override fun onStarted() {
+                                spotlight = true
+                            }
+
+                            override fun onEnded() {
+                                spotlight = false
+                            }
+                        })
                         .start()
             }
             DataStore.introShown = true
@@ -136,6 +148,14 @@ class WalletActivity : AppCompatActivity() {
         super.onPause()
         job?.cancel()
         job = null
+    }
+
+    override fun onBackPressed() {
+        if (spotlight) {
+            Spotlight.with(this).closeSpotlight()
+        } else {
+            super.onBackPressed()
+        }
     }
 
     fun setBalance(newBalance: String): Boolean {

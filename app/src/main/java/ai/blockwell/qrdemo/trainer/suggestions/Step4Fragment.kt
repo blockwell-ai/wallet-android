@@ -55,11 +55,7 @@ class Step4Fragment : StepFragment(), Events.Subscriber {
 
             if (isAdded) {
                 suggestions.fold({
-                    ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, it)
-                            .also { adapter ->
-                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                                spinner.adapter = adapter
-                            }
+                    spinner.setItems(it)
                 }, {
                     requireActivity().alert(R.string.unknown_error).show()
                 })
@@ -68,7 +64,7 @@ class Step4Fragment : StepFragment(), Events.Subscriber {
     }
 
     fun vote() {
-        val item = spinner.selectedItem
+        val item = spinner.getItems<Suggestion>()[spinner.selectedIndex]
 
         if (item is Suggestion) {
             vote.isEnabled = false
