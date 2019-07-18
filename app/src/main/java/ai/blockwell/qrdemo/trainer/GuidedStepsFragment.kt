@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.fragment_guided_steps.*
 import org.koin.android.architecture.ext.sharedViewModel
 
@@ -23,9 +24,26 @@ abstract class GuidedStepsFragment : Fragment(), Events.Subscriber {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = GuidedStepsPagerAdapter(fragmentsList(), fragmentManager!!)
+        adapter = GuidedStepsPagerAdapter(fragmentsList(), childFragmentManager)
         pager.offscreenPageLimit = 1
         pager.adapter = adapter
+
+        pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+                // No op
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                // No op
+            }
+
+            override fun onPageSelected(position: Int) {
+                val frag = adapter.getFragment(position)
+                if (frag is Events.Subscriber) {
+                    frag.onEvent(Events.Type.REFRESH, Any())
+                }
+            }
+        })
     }
 
     override fun onResume() {

@@ -4,11 +4,15 @@ import android.content.Context
 import android.widget.FrameLayout
 import ai.blockwell.qrdemo.R
 import android.annotation.TargetApi
+import android.content.res.ColorStateList
 import android.os.Build
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.ContextCompat.getColor
 import kotlinx.android.synthetic.main.view_back_next.view.*
 import org.jetbrains.anko.layoutInflater
+import org.jetbrains.anko.textColorResource
+import org.jetbrains.anko.textResource
 
 class BackNextView : FrameLayout {
     @JvmOverloads
@@ -35,6 +39,11 @@ class BackNextView : FrameLayout {
     }
     fun hideBack() {
         back.visibility = View.INVISIBLE
+    }
+    fun useSkip() {
+        next_text.textResource = R.string.skip
+        next_text.textColorResource = R.color.colorHelper
+        next_icon.imageTintList = ColorStateList.valueOf(getColor(context, R.color.colorHelper))
     }
     fun disableNext() {
         next.isEnabled = false

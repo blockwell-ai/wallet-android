@@ -1,50 +1,59 @@
-package ai.blockwell.qrdemo.trainer.suggestions
+package ai.blockwell.qrdemo.trainer.freeze
 
 import ai.blockwell.qrdemo.R
 import ai.blockwell.qrdemo.api.TransactionStatusResponse
 import ai.blockwell.qrdemo.trainer.Events
 import ai.blockwell.qrdemo.trainer.StepFragment
 import ai.blockwell.qrdemo.utils.hideKeyboard
+import android.content.ClipData
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_suggestions_step2.*
+import kotlinx.android.synthetic.main.fragment_freeze_step4.*
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
+import org.jetbrains.anko.clipboardManager
+import org.jetbrains.anko.longToast
 
-class Step2Fragment : StepFragment() {
-    override val layoutRes = R.layout.fragment_suggestions_step2
+class Step4Fragment : StepFragment() {
+    override val layoutRes = R.layout.fragment_freeze_step4
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         buttons.useSkip()
+
+        user_wallet.setOnClickListener {
+            val clipData = ClipData.newPlainText("Wallet address", user_wallet.text)
+
+            activity?.apply {
+                clipboardManager.primaryClip = clipData
+                longToast(R.string.account_copied)
+            }
+        }
     }
 
     override fun submit() {
-        val text = name.text.toString()
+        val address = account.text.toString()
 
-        if (text.isEmpty()) {
-            name.error = "Please enter a name"
+        if (address.isEmpty()) {
+            account.error = "Please enter an address"
             return
         }
 
-        // Disable the create button when submitting
         submit.isEnabled = false
         hideKeyboard()
         scope.launch {
-            // This calls the function in the smart contract to create a suggestion
-            val result = model.createSuggestion(text)
+            val result = model.send("unfreeze", listOf(address))
 
             result.fold({
-                // Creating the transaction was successful, so now we need to watch for result
                 watchTransaction(it.id,
-                        "Creating suggestion...",
-                        "Suggestion created.") {
+                        "Unfreezing wallet...",
+                        "Wallet unfrozen.") {
                     onResult(it)
                 }
             }, {
-                // Failed, show an error message
                 requireActivity().alert(R.string.unknown_error).show()
                 submit.isEnabled = true
             })
@@ -54,11 +63,8 @@ class Step2Fragment : StepFragment() {
     fun onResult(result: TransactionStatusResponse) {
         scope.launch {
             if (result.status == "completed") {
-                // The contract function was successful, these publish events will move the
-                // flow forward
                 model.events.publish(Events.Type.NEXT)
             } else {
-                // The transaction failed, show an error message
                 requireActivity().alert(R.string.contract_send_failed).show()
             }
         }

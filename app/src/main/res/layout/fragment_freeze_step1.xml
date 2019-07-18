@@ -4,7 +4,6 @@
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:ignore="HardcodedText">
 
     <ScrollView
@@ -21,31 +20,22 @@
             <TextView
                 style="@style/StepTextStyle"
                 android:layout_marginTop="32dp"
-                android:text="Voting is also simple, just select the suggestion you'd like to vote on, and click Vote." />
-
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/spinner"
-                app:ms_hint="Select Suggestion"
-                app:ms_hint_color="@color/colorHelper"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:hint="Select Suggestion" />
-
-            <Button
-                android:id="@+id/submit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="16dp"
-                android:text="Vote" />
+                android:text="You can prevent an individual wallet from moving tokens by freezing that wallet." />
 
             <TextView
                 style="@style/StepTextStyle"
-                android:layout_marginTop="32dp"
-                android:text="Voting can take up to 20 seconds." />
+                android:layout_marginTop="16dp"
+                android:text="When frozen, that wallet cannot send or receive your tokens through any means until they are unfrozen." />
 
+            <TextView
+                style="@style/StepTextStyle"
+                android:layout_marginTop="16dp"
+                android:text="This Guide walks you through both freezing and unfreezing a wallet. Click Next to continue." />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
         </LinearLayout>
     </ScrollView>
 

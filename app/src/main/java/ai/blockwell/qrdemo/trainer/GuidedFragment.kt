@@ -8,14 +8,23 @@ import ai.blockwell.qrdemo.api.TransactionStatusResponse
 import ai.blockwell.qrdemo.viewmodel.TrainerModel
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
+import org.jetbrains.anko.applyRecursively
 import org.koin.android.architecture.ext.sharedViewModel
 import org.koin.android.ext.android.inject
 
@@ -28,12 +37,72 @@ abstract class GuidedFragment : Fragment() {
     val model by sharedViewModel<TrainerModel>()
     val client by inject<ApiClient>()
 
+    lateinit var layout: ViewGroup
+
+    abstract val layoutRes: Int
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        return inflater.inflate(layoutRes, container, false)
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        if (view.findViewById<ViewGroup>(R.id.layout) == null) {
+            throw Exception("GuidedFragment subclass must have R.id.layout as a ViewGroup")
+        }
+
+        layout = view.findViewById(R.id.layout)
+
+        layout.applyRecursively {
+            if (it is EditText && it.imeOptions == EditorInfo.IME_ACTION_GO) {
+                it.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
+                    if (actionId == EditorInfo.IME_ACTION_GO) {
+                        submit()
+                        true
+                    } else {
+                        false
+                    }
+                })
+            }
+        }
+
+        view.findViewById<Button>(R.id.submit)?.setOnClickListener { submit() }
+
+        view.findViewById<BackNextView>(R.id.buttons)?.apply {
+            onNextClick {
+                model.events.publish(Events.Type.NEXT)
+            }
+            onBackClick {
+                model.events.publish(Events.Type.BACK)
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (this is Events.Subscriber) {
+            model.events.subscribe(this)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (this is Events.Subscriber) {
+            model.events.unsubscribe(this)
+        }
+    }
+
+    open fun submit() {}
+
     // This function displays a snackbar for the pending transaction, and a new
     // snackbar once it completes with an Etherscan link
-    fun watchTransaction(root: View, id: String, pendingText: String, successText: String, completed: (TransactionStatusResponse) -> Unit) {
+    fun watchTransaction(id: String, pendingText: String, successText: String, completed: (TransactionStatusResponse) -> Unit) {
         scope.launch {
             val snackbar = Snackbar
-                    .make(root, pendingText, Snackbar.LENGTH_INDEFINITE)
+                    .make(layout, pendingText, Snackbar.LENGTH_INDEFINITE)
             snackbar.show()
 
             // This is a coroutine channel that sends updates on a transaction
@@ -45,7 +114,7 @@ abstract class GuidedFragment : Fragment() {
                     // If it's completed, remove the pending snackbar and show the completion one
                     snackbar.dismiss()
                     val snackbarSuccess = Snackbar
-                            .make(root, successText, Snackbar.LENGTH_INDEFINITE)
+                            .make(layout, successText, Snackbar.LENGTH_INDEFINITE)
                             .setActionTextColor(ContextCompat.getColor(requireContext(), R.color.link))
 
                     snackbarSuccess.setAction(R.string.view_on_etherscan) { _ ->
@@ -68,6 +137,5 @@ abstract class GuidedFragment : Fragment() {
         }
     }
 
-    fun watchTransaction(root: View, id: String, pendingText: Int, successText: Int, completed: (TransactionStatusResponse) -> Unit)
-            = watchTransaction(root, id, getString(pendingText), getString(successText), completed)
+    fun watchTransaction(id: String, pendingText: Int, successText: Int, completed: (TransactionStatusResponse) -> Unit) = watchTransaction(id, getString(pendingText), getString(successText), completed)
 }

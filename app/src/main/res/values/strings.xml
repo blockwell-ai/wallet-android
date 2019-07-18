@@ -96,4 +96,5 @@
     <string name="back">BACK</string>
     <string name="suggestions_list">Suggestions List</string>
     <string name="votes">VOTES</string>
+    <string name="skip">SKIP</string>
 </resources>

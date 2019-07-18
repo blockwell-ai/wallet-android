@@ -62,8 +62,8 @@ class TrainerModel(val client: ApiClient, val proxy: Proxy) : ViewModel() {
         send("vote", listOf(index.toString(), ""))
     }
 
-    private suspend fun call(method: String, args: List<String> = listOf()) = proxy.contractCall(DataStore.trainerToken, method, args)
-    private suspend fun send(method: String, args: List<String> = listOf()) = proxy.contractSend(DataStore.trainerToken, method, args)
+    suspend fun call(method: String, args: List<String> = listOf()) = ensureContractReady { proxy.contractCall(DataStore.trainerToken, method, args) }
+    suspend fun send(method: String, args: List<String> = listOf()) = ensureContractReady { proxy.contractSend(DataStore.trainerToken, method, args) }
 
     // A suspending function that makes sure the user's Trainer Token is ready before proceeding
     private suspend fun <T : Any> ensureContractReady(block: suspend () -> Result<T, Exception>): Result<T, Exception> {

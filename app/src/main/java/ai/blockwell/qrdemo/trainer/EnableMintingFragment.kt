@@ -11,11 +11,7 @@ import kotlinx.android.synthetic.main.fragment_enable_minting.*
 import kotlinx.coroutines.launch
 
 class EnableMintingFragment : GuidedFragment() {
-    // Standard Android method to create layout from XML
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_enable_minting, container, false)
-    }
+    override val layoutRes = R.layout.fragment_enable_minting
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -60,7 +56,7 @@ class EnableMintingFragment : GuidedFragment() {
 
             if (tx != null) {
                 // watchTransaction is defined in GuidedFragment
-                watchTransaction(enable_minting, tx.id, R.string.enabling_minting, R.string.minting_enabled) {
+                watchTransaction(tx.id, R.string.enabling_minting, R.string.minting_enabled) {
                     getMintingStatus()
                 }
             } else {
@@ -86,7 +82,7 @@ class EnableMintingFragment : GuidedFragment() {
 
             if (tx != null) {
                 // watchTransaction is defined in GuidedFragment
-                watchTransaction(mint, tx.id, R.string.minting_tokens, R.string.tokens_minted) {
+                watchTransaction(tx.id, R.string.minting_tokens, R.string.tokens_minted) {
                     mint.isEnabled = true
                 }
             } else {

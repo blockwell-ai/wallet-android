@@ -1,27 +1,30 @@
-package ai.blockwell.qrdemo.trainer.suggestions
+package ai.blockwell.qrdemo.trainer.freeze
 
 import ai.blockwell.qrdemo.R
 import ai.blockwell.qrdemo.trainer.Events
 import ai.blockwell.qrdemo.trainer.StepFragment
+import ai.blockwell.qrdemo.utils.boolean
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import kotlinx.android.synthetic.main.fragment_suggestions_step3.*
+import android.view.ViewGroup
+import kotlinx.android.synthetic.main.fragment_freeze_step3.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.alert
 
 class Step3Fragment : StepFragment(), Events.Subscriber {
-    override val layoutRes = R.layout.fragment_suggestions_step3
+    override val layoutRes = R.layout.fragment_freeze_step3
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         buttons.hideBack()
         load()
     }
 
     override fun onEvent(type: Events.Type, data: Any) {
-        if (view != null && type == Events.Type.REFRESH) {
-            suggestions_list.loading()
+        if (type == Events.Type.REFRESH) {
             load()
         }
     }
@@ -30,14 +33,12 @@ class Step3Fragment : StepFragment(), Events.Subscriber {
         scope.launch {
             delay(1000)
             if (isAdded) {
-                val suggestions = model.getSuggestions()
+                val result = model.call("isFrozen", listOf(user_wallet.text.toString()))
 
-                if (isAdded) {
-                    suggestions.fold({
-                        suggestions_list.setSuggestions(it)
-                    }, {
-                        requireActivity().alert(R.string.unknown_error).show()
-                    })
+                try {
+                    frozen_status.boolean(result.get().data.asBoolean)
+                } catch (e: Exception) {
+                    Log.e("Step3Fragment", "Error getting frozen status", e)
                 }
             }
         }

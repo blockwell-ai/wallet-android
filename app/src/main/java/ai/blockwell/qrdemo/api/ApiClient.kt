@@ -9,6 +9,7 @@ import com.github.kittinunf.fuel.coroutines.awaitObjectResult
 import com.github.kittinunf.result.Result
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import com.google.gson.JsonSyntaxException
 import java.nio.charset.Charset
 
 /**
@@ -100,12 +101,17 @@ class ApiClient(val gson: Gson) {
         result.fold({ response ->
             res = Result.of(response)
         }, { error ->
-            val json = gson.fromJson(error.response.data.toString(Charset.defaultCharset()), JsonObject::class.java)
-            Log.e("ApiClient", "Exception in API call", error)
-            res = if (json == null) {
-                Result.error(error)
-            } else {
-                Result.error(ApiException(json))
+            try {
+                val json = gson.fromJson(error.response.data.toString(Charset.defaultCharset()), JsonObject::class.java)
+                Log.e("ApiClient", "Exception in API call", error)
+                res = if (json == null) {
+                    Result.error(error)
+                } else {
+                    Result.error(ApiException(json))
+                }
+            } catch (e: JsonSyntaxException) {
+                Log.e("ApiClient", "Error reading error response", e)
+                res = Result.error(e)
             }
         })
 
