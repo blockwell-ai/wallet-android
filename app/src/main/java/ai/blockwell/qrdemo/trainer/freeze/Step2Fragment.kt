@@ -7,9 +7,7 @@ import ai.blockwell.qrdemo.trainer.StepFragment
 import ai.blockwell.qrdemo.utils.hideKeyboard
 import android.content.ClipData
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_freeze_step2.*
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
