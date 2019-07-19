@@ -19,8 +19,8 @@ android {
         applicationId "ai.blockwell.qrdemo"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 14
-        versionName "1.2.1"
+        versionCode 15
+        versionName "1.3.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         setProperty("archivesBaseName", config['APP_ID'] + "-" + "-v" + versionName)
     }
@@ -42,8 +42,8 @@ android {
             }
         }
         debug {
-            //buildConfigField("String", "API_BASEURL", "\"http://10.0.0.2:3000\"")
-            buildConfigField("String", "API_BASEURL", "\"https://qr.lenswallet.io\"")
+            buildConfigField("String", "API_BASEURL", "\"http://10.0.0.2:3000\"")
+            //buildConfigField("String", "API_BASEURL", "\"https://qr.lenswallet.io\"")
             versionNameSuffix "-debug"
             if (config['APP_ID'] != "base") {
                 applicationIdSuffix "." + config['APP_ID']

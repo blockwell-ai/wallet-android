@@ -21,8 +21,9 @@ class Tx(val client: ApiClient) {
         response
     }
 
-    suspend fun submit(shortcode: String, params: Parameters) = withContext(Dispatchers.Default) {
-        val response = client.postWithAuth(shortcode, params, DataStore.accessToken, TxResponse.Deserializer, "{}")
+    suspend fun submit(shortcode: String, params: Parameters, values: List<String>) = withContext(Dispatchers.Default) {
+        val response = client.postWithAuth(shortcode, params, DataStore.accessToken, TxResponse.Deserializer,
+                SubmitRequest(values))
 
         response
     }
@@ -36,6 +37,7 @@ data class TxResponse(
         val method: String,
         val creator: String,
         val arguments: List<Argument>,
+        val address: String?,
         val confirmationLink: String?
 
 ) : Parcelable {
@@ -46,9 +48,15 @@ data class TxResponse(
 
 @Parcelize
 data class Argument(
-        val label: String?,
+        val label: String,
+        val type: String,
         val dynamic: String?,
         val decimals: Int?,
         val symbol: String?,
-        val value: String?
+        val value: String?,
+        val help: String?
 ) : Parcelable
+
+data class SubmitRequest(
+        val arguments: List<String>
+)

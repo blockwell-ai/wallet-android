@@ -12,7 +12,7 @@ import android.text.style.StyleSpan
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import ai.blockwell.qrdemo.api.TxResponse
-import ai.blockwell.qrdemo.view.ArgumentView
+import ai.blockwell.qrdemo.view.StaticArgumentView
 import ai.blockwell.qrdemo.view.WinningsView
 import ai.blockwell.qrdemo.viewmodel.TxModel
 import androidx.appcompat.app.AlertDialog
@@ -57,11 +57,11 @@ class TxSuccessActivity : AppCompatActivity() {
 
         description.text = spannable
         function.text = tx.method
+        contract.text = tx.address
 
         arguments.removeAllViews()
         tx.arguments.forEach {
-            val view = ArgumentView(this)
-            view.update(it)
+            val view = StaticArgumentView(this, it)
             arguments.addView(view)
         }
 

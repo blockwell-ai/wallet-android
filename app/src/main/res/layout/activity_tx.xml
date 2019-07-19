@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".TxActivity">
 
@@ -43,19 +44,53 @@
                         android:id="@+id/function"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="16dp"
+                        android:paddingTop="16dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         tools:text="payment" />
 
-                    <LinearLayout
-                        android:id="@+id/arguments"
+                    <TextView
+                        android:id="@+id/contract"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:paddingLeft="16dp"
                         android:paddingRight="16dp"
-                        android:paddingBottom="16dp">
+                        android:paddingBottom="16dp"
+                        android:textSize="13sp"
+                        android:fontFamily="monospace"
+                        android:textColor="@color/colorHelper"
+                        android:maxLines="1"
+                        app:autoSizeMaxTextSize="13sp"
+                        app:autoSizeMinTextSize="10sp"
+                        app:autoSizeTextType="uniform"
+                        tools:text="0xe8340FdfE79851e9E117b3033E147a654dbDb0Aa" />
+
+                    <LinearLayout
+                        android:id="@+id/static_arguments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/please_fill"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/please_fill"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:layout_marginTop="16dp"
+                        android:visibility="gone"
+                        />
+
+                    <LinearLayout
+                        android:id="@+id/input_arguments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
                     </LinearLayout>
                 </LinearLayout>

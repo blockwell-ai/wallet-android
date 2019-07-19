@@ -22,12 +22,12 @@ class TxModel(val client: ApiClient) : ViewModel() {
         tx.get(url.path!!, params)
     }
 
-    suspend fun submitCode(url: Uri) = viewModelScope.async {
+    suspend fun submitCode(url: Uri, values: List<String> = listOf()) = viewModelScope.async {
         val params = url.queryParameterNames.map {
             it!! to url.getQueryParameter(it)!!
         }
 
-        tx.submit(url.path!!, params)
+        tx.submit(url.path!!, params, values)
     }
 
     fun getTxStatus(txId: String): TransactionStatusChannel {

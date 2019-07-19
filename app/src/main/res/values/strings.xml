@@ -98,4 +98,6 @@
     <string name="votes">VOTES</string>
     <string name="skip">SKIP</string>
     <string name="generated_fragments">Generated Fragments</string>
+    <string name="argument">Argument</string>
+    <string name="please_fill">Please fill in the following fields.</string>
 </resources>
