@@ -5,18 +5,20 @@
     "scripts": {},
     "dependencies": {
         "@types/fs-extra": "7.0.0",
-        "bluebird": "3.5.5",
+        "axios": "0.19.0",
         "bignumber.js": "9.0.0",
-        "http-server": "0.11.1",
+        "bluebird": "3.5.5",
+        "chalk": "2.4.2",
+        "change-case": "3.1.0",
         "commander": "2.20.0",
+        "execa": "2.0.1",
+        "fs-extra": "8.0.1",
+        "glob": "7.1.4",
+        "handlebars": "4.1.2",
+        "http-server": "0.11.1",
+        "inquirer": "6.4.1",
         "js-yaml": "3.13.1",
         "rambdax": "2.10.0",
-        "change-case": "3.1.0",
-        "chalk": "2.4.2",
-        "inquirer": "6.4.1",
-        "axios": "0.19.0",
-        "fs-extra": "8.0.1",
-        "execa": "2.0.1",
-        "glob": "7.1.4"
+        "handlebars-wax": "6.1.0"
     }
 }

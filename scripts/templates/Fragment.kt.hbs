@@ -1,0 +1,65 @@
+package ai.blockwell.qrdemo.generated
+
+import ai.blockwell.qrdemo.R
+import ai.blockwell.qrdemo.api.TransactionStatusResponse
+import ai.blockwell.qrdemo.trainer.StepFragment
+import ai.blockwell.qrdemo.utils.hideKeyboard
+import android.os.Bundle
+import android.view.View
+import kotlinx.android.synthetic.main.fragment_generated_{{lower}}.*
+import kotlinx.coroutines.launch
+import org.jetbrains.anko.alert
+
+class {{pascal}}Fragment : StepFragment() {
+    override val layoutRes = R.layout.fragment_generated_{{lower}}
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Uncomment these as needed
+        //buttons.useSkip()
+        //buttons.hideBack()
+    }
+
+    override fun submit() {
+        submit.isEnabled = false
+        hideKeyboard()
+        scope.launch {
+            val args = mutableListOf<String>()
+
+            {{#each args}}
+            {{#if decimals}}
+            args.add({{name}}.text.fromDecimals())
+            {{else}}
+            args.add({{name}}.text.toString())
+            // args.add({{name}}.text.fromDecimals()) // Use this for decimal conversion
+            {{/if}}
+
+            {{/each}}
+
+            val result = model.send("{{function}}", args)
+
+            result.fold({
+                watchTransaction(it.id,
+                        "Sending {{title}}...",
+                        "{{title}} sent.") {
+                    onResult(it)
+                    submit.isEnabled = true
+                }
+            }, {
+                requireActivity().alert(R.string.unknown_error).show()
+                submit.isEnabled = true
+            })
+        }
+    }
+
+    fun onResult(result: TransactionStatusResponse) {
+        scope.launch {
+            if (result.status == "completed") {
+                // Successful transaction
+            } else {
+                requireActivity().alert(R.string.contract_send_failed).show()
+            }
+        }
+    }
+}

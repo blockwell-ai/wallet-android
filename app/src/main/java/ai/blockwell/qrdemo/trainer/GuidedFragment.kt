@@ -1,14 +1,13 @@
 package ai.blockwell.qrdemo.trainer
 
 import ai.blockwell.qrdemo.R
-import ai.blockwell.qrdemo.api.ApiClient
-import ai.blockwell.qrdemo.api.Etherscan
-import ai.blockwell.qrdemo.api.TransactionStatusChannel
-import ai.blockwell.qrdemo.api.TransactionStatusResponse
+import ai.blockwell.qrdemo.api.*
 import ai.blockwell.qrdemo.viewmodel.TrainerModel
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -138,4 +137,16 @@ abstract class GuidedFragment : Fragment() {
     }
 
     fun watchTransaction(id: String, pendingText: Int, successText: Int, completed: (TransactionStatusResponse) -> Unit) = watchTransaction(id, getString(pendingText), getString(successText), completed)
+
+    suspend fun Editable.fromDecimals(): String {
+        var decimals = 18
+
+        try {
+            decimals = model.getDecimals()
+        } catch (e: Exception) {
+            Log.e("GuidedFragment", "Error retrieving decimals for form, assuming 18", e)
+        }
+
+        return this.toString().fromDecimals(decimals)
+    }
 }

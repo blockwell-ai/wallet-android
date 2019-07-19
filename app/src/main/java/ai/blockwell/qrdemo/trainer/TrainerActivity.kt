@@ -2,9 +2,12 @@ package ai.blockwell.qrdemo.trainer
 
 import ai.blockwell.qrdemo.R
 import ai.blockwell.qrdemo.data.DataStore
+import ai.blockwell.qrdemo.generated.base.GeneratedActivity
 import ai.blockwell.qrdemo.viewmodel.TrainerModel
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -14,6 +17,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
+import org.jetbrains.anko.startActivity
 import org.koin.android.architecture.ext.viewModel
 
 class TrainerActivity : AppCompatActivity(), TrainerFragment.OnOptionSelectedListener {
@@ -34,6 +38,21 @@ class TrainerActivity : AppCompatActivity(), TrainerFragment.OnOptionSelectedLis
         }.commit()
 
         loadToken()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_trainer, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_generated -> {
+                startActivity<GeneratedActivity>()
+                true
+            }
+            else -> false
+        }
     }
 
     override fun onResume() {

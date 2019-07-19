@@ -27,6 +27,16 @@
                 android:value="ai.blockwell.qrdemo.WalletActivity" />
         </activity>
         <activity
+            android:name=".generated.base.GeneratedActivity"
+            android:label="@string/generated_fragments"
+            android:parentActivityName=".trainer.TrainerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ai.blockwell.qrdemo.trainer.TrainerActivity" />
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:noHistory="true">
             <intent-filter>

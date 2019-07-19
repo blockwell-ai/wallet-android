@@ -17,6 +17,18 @@ class TrainerModel(val client: ApiClient, val proxy: Proxy) : ViewModel() {
     // This is a channel that provides the status of the user's own Trainer Token
     val channel = TrainerChannel(client)
     val events = Events()
+    var decimals: Int? = null
+
+    suspend fun getDecimals(): Int {
+        val dec = decimals
+        return if (dec == null) {
+            val value = call("decimals").get().data.asString.toInt()
+            decimals = value
+            value
+        } else {
+            dec
+        }
+    }
 
     suspend fun getBalance() = ensureContractReady {
         // Proxy through to API Miner

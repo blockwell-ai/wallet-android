@@ -1,0 +1,25 @@
+package ai.blockwell.qrdemo.generated
+
+import ai.blockwell.qrdemo.trainer.FragmentProvider
+import ai.blockwell.qrdemo.trainer.GuidedStepsFragment
+import kotlinx.android.synthetic.main.fragment_guided_steps.*
+
+val funcList = listOf(
+        {{{names}}}
+)
+
+class AAAGeneratedPagingFragment : GuidedStepsFragment() {
+    var position = 0
+
+    override fun fragmentsList() = listOf<FragmentProvider>(
+            {{fragments}}
+    )
+
+    override fun onResume() {
+        super.onResume()
+        pager.swipingEnabled = true
+        pager.setCurrentItem(position, false)
+
+        requireActivity().title = "Generated Screens"
+    }
+}
