@@ -26,7 +26,7 @@ async function getTemplate(template) {
     let t = cache[template];
 
     if (!t) {
-        let templateString = await fs.readFile(`templates/${template}.hbs`);
+        let templateString = await fs.readFile(path.resolve(basePath, `templates`, `${template}.hbs`));
         t = wax.compile(templateString.toString());
     }
 

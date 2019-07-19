@@ -20,6 +20,7 @@ object DataStore : KotprefModel() {
     var trainerIntroShown by booleanPref(false)
     var trainerToken by stringPref("")
     var trainerTokenAddress by stringPref("")
+    var override = false
 
     // Details on the token
     var tokenName by stringPref("")

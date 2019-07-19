@@ -1,4 +1,5 @@
 const fs = require('fs-extra');
+const axios = require('axios');
 
 async function replaceInFile(pattern, replacement, file) {
     let contents = (await fs.readFile(file)).toString('UTF-8');

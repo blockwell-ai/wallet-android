@@ -22,9 +22,7 @@ class Trainer(val client: ApiClient) {
 
 @Parcelize
 data class TrainerResponse(
-        val status: String,
         val contractId: String?,
-        val transactionId: String?,
         val address: String?
 ) : Parcelable {
     object Deserializer : ResponseDeserializable<TrainerResponse> {

@@ -56,6 +56,11 @@ class TrainerChannel(val client: ApiClient) : CoroutineScope {
             return true
         }
 
+        if (DataStore.override && DataStore.trainerToken != "" && DataStore.trainerTokenAddress != "") {
+            channel.offer(TrainerResponse(DataStore.trainerToken, DataStore.trainerTokenAddress))
+            return true
+        }
+
         val result = trainer.get()
 
         val response = result.component1()
