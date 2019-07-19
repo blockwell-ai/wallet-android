@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+//IMPORT
 
 class TrainerOptionAdapter : RecyclerView.Adapter<TrainerOptionHolder>() {
     public var onClickListener: ((TrainerOption) -> Unit)? = null
@@ -17,6 +18,7 @@ class TrainerOptionAdapter : RecyclerView.Adapter<TrainerOptionHolder>() {
                     "Add Suggestions users can vote on.") { SuggestionsFragment() },
             TrainerOption("Guided 3: Freezing Wallets",
                     "Freeze wallets to prevent their use.") { FreezeFragment() }
+//FLOW
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = TrainerOptionHolder(TrainerOptionView(parent.context))

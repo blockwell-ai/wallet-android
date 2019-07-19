@@ -62,6 +62,7 @@ let autoDecimals = [
                 return it
             })
         };
+        conf.layout = `fragment_generated_${conf.lower}`;
 
         let dec = autoDecimals.find(it => it[0] === conf.function && it[1] === conf.args.length);
 

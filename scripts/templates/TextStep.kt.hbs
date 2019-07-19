@@ -1,0 +1,19 @@
+package ai.blockwell.qrdemo.trainer.{{flow}}
+
+import ai.blockwell.qrdemo.R
+import ai.blockwell.qrdemo.trainer.StepFragment
+import android.os.Bundle
+import android.view.View
+import kotlinx.android.synthetic.main.{{layout}}.*
+
+class Step{{n}}Fragment : StepFragment() {
+    override val layoutRes = R.layout.{{layout}}
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Uncomment these as needed
+        //buttons.useSkip()
+        //buttons.hideBack()
+    }
+}

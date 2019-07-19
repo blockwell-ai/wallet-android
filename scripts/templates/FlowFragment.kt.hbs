@@ -1,0 +1,18 @@
+package ai.blockwell.qrdemo.trainer.{{flow}}
+
+import ai.blockwell.qrdemo.trainer.FragmentProvider
+import ai.blockwell.qrdemo.trainer.GuidedStepsFragment
+
+class {{pascal}}Fragment : GuidedStepsFragment() {
+    var position = 0
+
+    override fun fragmentsList() = listOf<FragmentProvider>(
+            {{{fragments}}}
+    )
+
+    override fun onResume() {
+        super.onResume()
+
+        requireActivity().title = "{{title}}"
+    }
+}

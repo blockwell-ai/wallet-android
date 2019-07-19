@@ -1,4 +1,8 @@
+{{#if flow}}
+package ai.blockwell.qrdemo.trainer.{{flow}}
+{{else}}
 package ai.blockwell.qrdemo.generated
+{{/if}}
 
 import ai.blockwell.qrdemo.R
 import ai.blockwell.qrdemo.api.TransactionStatusResponse
@@ -6,12 +10,12 @@ import ai.blockwell.qrdemo.trainer.StepFragment
 import ai.blockwell.qrdemo.utils.hideKeyboard
 import android.os.Bundle
 import android.view.View
-import kotlinx.android.synthetic.main.fragment_generated_{{lower}}.*
+import kotlinx.android.synthetic.main.{{layout}}.*
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
 
 class {{pascal}}Fragment : StepFragment() {
-    override val layoutRes = R.layout.fragment_generated_{{lower}}
+    override val layoutRes = R.layout.{{layout}}
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
