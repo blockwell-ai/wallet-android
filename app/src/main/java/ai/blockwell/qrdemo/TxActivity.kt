@@ -71,11 +71,13 @@ class TxActivity : AppCompatActivity() {
     }
 
     private fun render(tx: TxResponse) {
-        val spannable = SpannableStringBuilder(getString(R.string.requesting_tx, tx.creator))
-        val bold = StyleSpan(Typeface.BOLD)
-        spannable.setSpan(bold, 0, tx.creator.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        if (tx.creator != null) {
+            val spannable = SpannableStringBuilder(getString(R.string.requesting_tx, tx.creator))
+            val bold = StyleSpan(Typeface.BOLD)
+            spannable.setSpan(bold, 0, tx.creator.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
 
-        description.text = spannable
+            description.text = spannable
+        }
         function.text = tx.method
         contract.text = tx.address
 

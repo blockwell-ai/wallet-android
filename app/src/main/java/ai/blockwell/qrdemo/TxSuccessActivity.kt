@@ -51,11 +51,13 @@ class TxSuccessActivity : AppCompatActivity() {
     private fun update(tx: TxResponse) {
         title = tx.method
 
-        val spannable = SpannableStringBuilder(getString(R.string.requested_tx, tx.creator))
-        val bold = StyleSpan(Typeface.BOLD)
-        spannable.setSpan(bold, 30, 30 + tx.creator.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        if (tx.creator != null) {
+            val spannable = SpannableStringBuilder(getString(R.string.requested_tx, tx.creator))
+            val bold = StyleSpan(Typeface.BOLD)
+            spannable.setSpan(bold, 30, 30 + tx.creator.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
 
-        description.text = spannable
+            description.text = spannable
+        }
         function.text = tx.method
         contract.text = tx.address
 

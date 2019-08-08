@@ -8,3 +8,4 @@ app/release
 local.properties
 scripts/node_modules
 scripts/.idea
+.git
