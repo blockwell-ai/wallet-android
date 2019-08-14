@@ -1,4 +1,4 @@
-package ai.blockwell.qrdemo.view
+package ai.blockwell.qrdemo.qr.view
 
 import ai.blockwell.qrdemo.R
 import ai.blockwell.qrdemo.api.ApiClient

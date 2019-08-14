@@ -1,5 +1,8 @@
-package ai.blockwell.qrdemo
+package ai.blockwell.qrdemo.qr
 
+import ai.blockwell.qrdemo.R
+import ai.blockwell.qrdemo.WebViewActivity
+import ai.blockwell.qrdemo.api.ApiClient
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
@@ -9,10 +12,13 @@ import android.text.style.StyleSpan
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import ai.blockwell.qrdemo.api.TxResponse
-import ai.blockwell.qrdemo.view.ArgumentView
-import ai.blockwell.qrdemo.view.InputArgumentView
-import ai.blockwell.qrdemo.view.StaticArgumentView
+import ai.blockwell.qrdemo.qr.view.ArgumentView
+import ai.blockwell.qrdemo.qr.view.InputArgumentView
+import ai.blockwell.qrdemo.qr.view.StaticArgumentView
+import ai.blockwell.qrdemo.qr.view.VotingArgumentView
 import ai.blockwell.qrdemo.viewmodel.TxModel
+import ai.blockwell.qrdemo.viewmodel.VotingModel
+import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_tx.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -20,6 +26,7 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.startActivity
 import org.koin.android.architecture.ext.viewModel
+import org.koin.android.ext.android.inject
 
 /**
  * Shows a QR code of the user's Ethereum address.
@@ -27,6 +34,7 @@ import org.koin.android.architecture.ext.viewModel
 class TxActivity : AppCompatActivity() {
     val scope = MainScope()
     val model by viewModel<TxModel>()
+    val votingModel by viewModel<VotingModel>()
     lateinit var url: Uri
 
     var arguments: List<ArgumentView> = listOf()
@@ -81,8 +89,12 @@ class TxActivity : AppCompatActivity() {
         function.text = tx.method
         contract.text = tx.address
 
-        arguments = tx.arguments.map {
-            if (it.value != null) {
+        val voting = tx.method == "vote" && tx.arguments.size == 2
+
+        arguments = tx.arguments.mapIndexed { index, it ->
+            if (voting && index == 0) {
+                VotingArgumentView(this, it, tx, votingModel)
+            } else if (it.value != null) {
                 StaticArgumentView(this, it) as ArgumentView
             } else {
                 InputArgumentView(this, it) as ArgumentView
@@ -90,11 +102,11 @@ class TxActivity : AppCompatActivity() {
         }
 
         arguments.forEach {
-            if (it is StaticArgumentView) {
-                static_arguments.addView(it)
-            } else if (it is InputArgumentView) {
+            if (it.static) {
+                static_arguments.addView(it as ViewGroup)
+            } else {
                 please_fill.visibility = View.VISIBLE
-                input_arguments.addView(it)
+                input_arguments.addView(it as ViewGroup)
             }
         }
     }

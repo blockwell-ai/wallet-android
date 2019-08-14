@@ -79,9 +79,14 @@ class SuggestionsListView : FrameLayout {
 
     class SuggestionHolder(val view: View) : RecyclerView.ViewHolder(view) {
         fun bind(suggestion: Suggestion) {
-            view.name.text = suggestion.text
+            view.text.text = suggestion.text
             view.votes.text = suggestion.votes.toString(10)
             view.number.text = view.context.getString(R.string.suggestion_num, suggestion.index)
+
+            if (suggestion.tag.isNotEmpty()) {
+                view.tagView.text = suggestion.tag
+                view.tagView.visibility = View.VISIBLE
+            }
         }
     }
 }

@@ -6,9 +6,7 @@ import ai.blockwell.qrdemo.trainer.Events
 import ai.blockwell.qrdemo.trainer.StepFragment
 import ai.blockwell.qrdemo.utils.hideKeyboard
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_suggestions_step2.*
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
@@ -22,10 +20,10 @@ class Step2Fragment : StepFragment() {
     }
 
     override fun submit() {
-        val text = name.text.toString()
+        val text = text.text.toString()
 
         if (text.isEmpty()) {
-            name.error = "Please enter a name"
+            text.error = "Please enter a name"
             return
         }
 

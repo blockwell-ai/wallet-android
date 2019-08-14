@@ -1,7 +1,14 @@
-package ai.blockwell.qrdemo
+package ai.blockwell.qrdemo.qr
 
+import ai.blockwell.qrdemo.R
 import ai.blockwell.qrdemo.api.ApiClient
 import ai.blockwell.qrdemo.api.Etherscan
+import ai.blockwell.qrdemo.api.TxResponse
+import ai.blockwell.qrdemo.qr.view.StaticArgumentView
+import ai.blockwell.qrdemo.qr.view.VotingArgumentView
+import ai.blockwell.qrdemo.qr.view.WinningsView
+import ai.blockwell.qrdemo.viewmodel.TxModel
+import ai.blockwell.qrdemo.viewmodel.VotingModel
 import android.content.Intent
 import android.graphics.Typeface
 import android.net.Uri
@@ -10,12 +17,8 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import ai.blockwell.qrdemo.api.TxResponse
-import ai.blockwell.qrdemo.view.StaticArgumentView
-import ai.blockwell.qrdemo.view.WinningsView
-import ai.blockwell.qrdemo.viewmodel.TxModel
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_tx_success.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
@@ -34,6 +37,7 @@ import org.koin.android.ext.android.inject
 class TxSuccessActivity : AppCompatActivity() {
     val scope = MainScope()
     val model by viewModel<TxModel>()
+    val votingModel by viewModel<VotingModel>()
     val client by inject<ApiClient>()
 
     // The parent job for all background work this activity subscribes to
@@ -62,8 +66,16 @@ class TxSuccessActivity : AppCompatActivity() {
         contract.text = tx.address
 
         arguments.removeAllViews()
-        tx.arguments.forEach {
-            val view = StaticArgumentView(this, it)
+
+        val voting = tx.method == "vote" && tx.arguments.size == 2
+
+        tx.arguments.mapIndexed { index, it ->
+            val view: View = if (voting && index == 0) {
+                VotingArgumentView(this, it, tx, votingModel)
+            } else {
+                StaticArgumentView(this, it)
+            }
+
             arguments.addView(view)
         }
 
@@ -84,7 +96,7 @@ class TxSuccessActivity : AppCompatActivity() {
                 tx.transactionHash?.let { hash ->
                     etherscan.setText(R.string.view_on_etherscan)
                     etherscan.textColorResource = R.color.link
-                    etherscan.setOnClickListener {_ ->
+                    etherscan.setOnClickListener { _ ->
                         val webpage = Uri.parse(Etherscan.tx(tx.network, hash))
                         val intent = Intent(Intent.ACTION_VIEW, webpage)
                         if (intent.resolveActivity(packageManager) != null) {
@@ -101,7 +113,7 @@ class TxSuccessActivity : AppCompatActivity() {
                     tx.events
                             ?.filterNotNull()
                             ?.filter { it.event == "ItemDropped" || it.event == "TokenWin" }
-                            ?.let {list ->
+                            ?.let { list ->
                                 if (list.isNotEmpty()) {
                                     val view = WinningsView(this@TxSuccessActivity, client)
                                     view.update(tx.network!!, list)

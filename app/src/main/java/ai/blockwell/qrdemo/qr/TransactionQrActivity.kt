@@ -1,7 +1,7 @@
-package ai.blockwell.qrdemo
+package ai.blockwell.qrdemo.qr
 
-import android.app.Activity
-import android.content.Intent
+import ai.blockwell.qrdemo.R
+import ai.blockwell.qrdemo.ScanQrActivity
 import android.os.Bundle
 import com.google.zxing.Result
 import kotlinx.android.synthetic.main.activity_scan_qr.*

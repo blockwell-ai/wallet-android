@@ -1,4 +1,4 @@
-package ai.blockwell.qrdemo.view
+package ai.blockwell.qrdemo.qr.view
 
 import ai.blockwell.qrdemo.R
 import ai.blockwell.qrdemo.api.Argument
@@ -15,10 +15,10 @@ import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.view_input_argument.view.*
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.layoutInflater
-import org.jetbrains.anko.lines
 
 @SuppressLint("ViewConstructor")
 class InputArgumentView(context: Context, val arg: Argument) : FrameLayout(context), ArgumentView {
+    override val static = false
 
     override val value: ArgumentValue
         get() {

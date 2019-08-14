@@ -16,4 +16,5 @@
     <color name="success">#558B2F</color>
     <color name="link">#2094B9</color>
     <color name="overlay">#CD000000</color>
+    <color name="error">#CDAF3823</color>
 </resources>

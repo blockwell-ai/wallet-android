@@ -1,4 +1,4 @@
-package ai.blockwell.qrdemo.view
+package ai.blockwell.qrdemo.qr.view
 
 import android.content.Context
 import android.widget.FrameLayout
@@ -8,16 +8,12 @@ import ai.blockwell.qrdemo.api.ArgumentValue
 import ai.blockwell.qrdemo.api.StringArgumentValue
 import android.annotation.SuppressLint
 import android.util.TypedValue.COMPLEX_UNIT_SP
-import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.TextViewCompat
 import kotlinx.android.synthetic.main.view_static_argument.view.*
 import org.jetbrains.anko.layoutInflater
 import org.jetbrains.anko.lines
-import org.jetbrains.anko.margin
 import java.math.BigDecimal
 import java.text.DecimalFormat
 
@@ -25,6 +21,8 @@ val format = DecimalFormat("#,###.######")
 
 @SuppressLint("ViewConstructor")
 class StaticArgumentView(context: Context, val arg: Argument) : FrameLayout(context), ArgumentView {
+    override val static = true
+
     override val value: ArgumentValue
         get() = arg.value ?: StringArgumentValue("")
 

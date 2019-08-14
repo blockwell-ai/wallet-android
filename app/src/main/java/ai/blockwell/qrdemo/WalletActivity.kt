@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import ai.blockwell.qrdemo.api.Auth
 import ai.blockwell.qrdemo.api.toDecimals
 import ai.blockwell.qrdemo.data.DataStore
+import ai.blockwell.qrdemo.qr.TransactionQrActivity
 import ai.blockwell.qrdemo.trainer.TrainerActivity
 import ai.blockwell.qrdemo.view.TransferAdapter
 import ai.blockwell.qrdemo.viewmodel.WalletModel
