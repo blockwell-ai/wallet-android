@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.textResource
 import org.koin.android.architecture.ext.viewModel
 
 /**
@@ -76,7 +77,14 @@ class TxActivity : AppCompatActivity() {
             val bold = StyleSpan(Typeface.BOLD)
             spannable.setSpan(bold, 0, tx.creator.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
 
-            description.text = spannable
+            creator.text = spannable
+        } else {
+            creator.textResource = R.string.requesting_tx_no_creator
+        }
+        if (tx.description != null) {
+            description.text = tx.description
+        } else {
+            description.visibility = View.GONE
         }
         function.text = tx.method
         contract.text = tx.address
