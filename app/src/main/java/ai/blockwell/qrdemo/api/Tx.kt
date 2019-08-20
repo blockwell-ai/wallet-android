@@ -52,6 +52,7 @@ data class TxResponse(
         val shortcode: String,
         val contractId: String,
         val method: String,
+        val description: String?,
         val creator: String?,
         val arguments: List<Argument>,
         val address: String?,

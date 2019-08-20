@@ -33,10 +33,10 @@ class StaticArgumentView(context: Context, val arg: Argument) : FrameLayout(cont
         if (arg.value != null) {
             if (arg.value.isArray()) {
                 arg.value.getArray().forEach {
-                    layout.addView(textView(format(it, arg)))
+                    layout.addView(textView(format(it)))
                 }
             } else {
-                layout.addView(textView(arg.value.getValue()))
+                layout.addView(textView(format(arg.value.getValue())))
             }
         }
     }
@@ -50,7 +50,7 @@ class StaticArgumentView(context: Context, val arg: Argument) : FrameLayout(cont
         return view
     }
 
-    private fun format(value: String, arg: Argument): String {
+    private fun format(value: String): String {
         val valueText = if (arg.decimals != null) {
             val d = BigDecimal(value)
             format.format(d)

@@ -48,6 +48,7 @@
     <string name="transaction_scan">Transaction Scan</string>
     <string name="transaction_scan_description">Scan a transaction QR code</string>
     <string name="requesting_tx">%s is requesting the following transaction</string>
+    <string name="requesting_tx_no_creator">Requesting the following transaction</string>
     <string name="requested_tx">Your transaction requested by %s has been sent.</string>
     <string name="cancel">Cancel</string>
     <string name="accept">Accept</string>
