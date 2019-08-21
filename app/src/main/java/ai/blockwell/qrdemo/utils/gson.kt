@@ -29,13 +29,17 @@ val argumentValueSerializer = JsonSerializer<ArgumentValue> { src, _, _ ->
 }
 
 class ArgumentValueTypeAdapter : TypeAdapter<ArgumentValue>() {
-    override fun write(out: JsonWriter, value: ArgumentValue) {
-        if (value.isArray()) {
-            out.beginArray()
-            value.getArray().forEach { out.value(it) }
-            out.endArray()
+    override fun write(out: JsonWriter, value: ArgumentValue?) {
+        if (value != null) {
+            if (value.isArray()) {
+                out.beginArray()
+                value.getArray().forEach { out.value(it) }
+                out.endArray()
+            } else {
+                out.value(value.getValue())
+            }
         } else {
-            out.value(value.getValue())
+            out.nullValue()
         }
     }
 

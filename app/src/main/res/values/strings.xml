@@ -50,6 +50,7 @@
     <string name="requesting_tx">%s is requesting the following transaction</string>
     <string name="requesting_tx_no_creator">Requesting the following transaction</string>
     <string name="requested_tx">Your transaction requested by %s has been sent.</string>
+    <string name="requested_tx_no_creator">Your transaction has been sent.</string>
     <string name="cancel">Cancel</string>
     <string name="accept">Accept</string>
     <string name="submit_failed">Failed to submit transaction, try again later</string>
@@ -101,4 +102,8 @@
     <string name="generated_fragments">Generated Fragments</string>
     <string name="argument">Argument</string>
     <string name="please_fill">Please fill in the following fields.</string>
+    <string name="select_suggestion">Select suggestion to vote for</string>
+    <string name="suggestion_id">Suggestion ID: %s</string>
+    <string name="failed_to_create_qr">Failed to create a QR Code:</string>
+    <string name="write_permission_explanation">Permission to write to external storage is required for sharing QR Codes. The image needs to be saved before it can be shared.</string>
 </resources>

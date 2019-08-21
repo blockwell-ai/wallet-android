@@ -1,0 +1,70 @@
+package ai.blockwell.qrdemo.qr
+
+import ai.blockwell.qrdemo.R
+import ai.blockwell.qrdemo.viewmodel.VotingModel
+import android.app.Activity
+import android.content.Intent
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_suggestions.*
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import org.jetbrains.anko.alert
+import org.koin.android.architecture.ext.viewModel
+
+class SuggestionsActivity : AppCompatActivity() {
+    companion object {
+        const val REQUEST = 1001
+    }
+
+    val scope = MainScope()
+    val votingModel by viewModel<VotingModel>()
+    var index = -1
+    var contractId = ""
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_suggestions)
+        setSupportActionBar(toolbar)
+        title = "Suggestions"
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setSubtitle(R.string.select_suggestion)
+
+        index = intent.getIntExtra("index", -1)
+        contractId = intent.getStringExtra("contractId") ?: ""
+
+        if (index == -1 || contractId.isEmpty()) {
+            val dialog = alert(R.string.unknown_error)
+            dialog.onCancelled { finish() }
+            dialog.show()
+        } else {
+            load()
+            suggestions_list.setClickListener {
+                val result = Intent("ai.blockwell.qrdemo.SUGGESTION_RESULT")
+                result.putExtra("index", index)
+                result.putExtra("suggestion", it)
+                setResult(Activity.RESULT_OK, result)
+                finish()
+            }
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
+
+    private fun load() {
+        scope.launch {
+            val result = votingModel.getSuggestions(contractId).await()
+            result.fold({
+                suggestions_list.setSuggestions(it)
+            }, {
+                val dialog = alert(getString(R.string.unknown_error) + " - " + it.message)
+                dialog.onCancelled { finish() }
+                dialog.show()
+            })
+        }
+    }
+}

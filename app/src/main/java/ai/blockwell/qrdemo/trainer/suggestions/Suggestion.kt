@@ -1,12 +1,17 @@
 package ai.blockwell.qrdemo.trainer.suggestions
 
+import android.os.Parcelable
+import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class Suggestion(
         val index: Int,
         val fullText: String,
         val votes: Int
-) {
-    val text: String
-    val tag: String
+) : Parcelable {
+    @IgnoredOnParcel val text: String
+    @IgnoredOnParcel val tag: String
 
     init {
         val index = fullText.indexOf(":")

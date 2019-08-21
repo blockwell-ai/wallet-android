@@ -3,7 +3,6 @@ package ai.blockwell.qrdemo.api
 import ai.blockwell.qrdemo.data.DataStore
 import ai.blockwell.qrdemo.utils.ArgumentValueTypeAdapter
 import android.os.Parcelable
-import com.github.kittinunf.fuel.core.Parameters
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.google.gson.GsonBuilder
 import kotlinx.android.parcel.Parcelize
@@ -44,6 +43,10 @@ class Tx(val client: ApiClient) {
 
         response
     }
+
+    suspend fun create(request: CreateQrRequest) = withContext(Dispatchers.Default) {
+        client.postWithAuth("api/qr/code", DataStore.accessToken, CreateQrResponse.Deserializer, request)
+    }
 }
 
 @Parcelize
@@ -68,11 +71,12 @@ data class TxResponse(
 data class Argument(
         val label: String,
         val type: String,
-        val dynamic: String?,
-        val decimals: Int?,
-        val symbol: String?,
-        val value: @RawValue ArgumentValue?,
-        val help: String?
+        val dynamic: String? = null,
+        val decimals: Int? = null,
+        val symbol: String? = null,
+        val value: @RawValue ArgumentValue? = null,
+        val help: String? = null,
+        val name: String? = null
 ) : Parcelable
 
 
@@ -99,3 +103,30 @@ data class ArrayArgumentValue(private val values: List<String>) : ArgumentValue(
 data class SubmitRequest(
         val arguments: List<ArgumentValue>
 )
+
+/*
+        contractId: Joi.string().uuid(),
+        method: Joi.string(),
+        description: Joi.string().optional().allow(""),
+        creator: Joi.string().optional().allow(""),
+        confirmationLink: Joi.string().optional().allow(""),
+        ctaLabel: Joi.string().optional().allow(""),
+        ctaLink: Joi.string().optional().allow(""),
+        arguments: Joi.array().optional(),
+ */
+data class CreateQrRequest(
+        val contractId: String,
+        val method: String,
+        val arguments: List<Argument> = emptyList()
+)
+
+@Parcelize
+data class CreateQrResponse(
+        val shortcode: String,
+        val url: String,
+        val image: String
+) : Parcelable {
+    object Deserializer : ResponseDeserializable<CreateQrResponse> {
+        override fun deserialize(content: String) = gson.fromJson(content, CreateQrResponse::class.java)
+    }
+}

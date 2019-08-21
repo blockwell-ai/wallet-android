@@ -2,9 +2,11 @@ package ai.blockwell.qrdemo.api
 
 import android.util.Log
 import ai.blockwell.qrdemo.data.DataStore
+import android.os.Parcelable
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.github.kittinunf.result.success
 import com.google.gson.Gson
+import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
@@ -88,22 +90,25 @@ class TransactionStatusChannel(val client: ApiClient, val txId: String) : Corout
     }
 }
 
+@Parcelize
 data class TransactionStatusResponse(
         val id: String,
         val status: String,
         val from: String,
+        val contractId: String?,
         val error: String?,
         val transactionHash: String?,
         val network: String?,
         val events: List<LogEvent?>?
-) {
+) : Parcelable {
     object Deserializer : ResponseDeserializable<TransactionStatusResponse> {
         override fun deserialize(content: String) = Gson().fromJson(content, TransactionStatusResponse::class.java)
     }
 }
 
+@Parcelize
 data class LogEvent(
         val event: String,
         val address: String,
         val returnValues: Map<String, String>
-)
+) : Parcelable

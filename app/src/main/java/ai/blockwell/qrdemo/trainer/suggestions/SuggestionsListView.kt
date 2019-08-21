@@ -57,7 +57,13 @@ class SuggestionsListView : FrameLayout {
         adapter.setSuggestions(suggestions)
     }
 
+    fun setClickListener(block: (suggestion: Suggestion) -> Unit) {
+        adapter.clickListener = block
+    }
+
     class SuggestionsAdapter : RecyclerView.Adapter<SuggestionHolder>() {
+
+        var clickListener: ((suggestion: Suggestion) -> Unit)? = null
 
         private var items = listOf<Suggestion>()
 
@@ -69,6 +75,9 @@ class SuggestionsListView : FrameLayout {
         override fun onBindViewHolder(holder: SuggestionHolder, position: Int) {
             val item = items[position]
             holder.bind(item)
+            clickListener?.let {
+                holder.view.setOnClickListener { it(items[position]) }
+            }
         }
 
         fun setSuggestions(suggestions: List<Suggestion>) {

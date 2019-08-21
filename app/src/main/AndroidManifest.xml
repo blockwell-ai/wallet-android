@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".WalletApplication"
@@ -53,6 +54,7 @@
             android:label="@string/login" />
         <activity
             android:name=".qr.TxSuccessActivity"
+            android:screenOrientation="portrait"
             android:label="@string/login" />
         <activity android:name=".qr.TxActivity" />
         <activity
@@ -71,6 +73,9 @@
         <activity
             android:name=".qr.TransactionQrActivity"
             android:parentActivityName=".WalletActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".qr.SuggestionsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LicensesActivity"

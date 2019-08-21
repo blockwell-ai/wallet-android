@@ -154,6 +154,7 @@ class WalletActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (spotlight) {
             Spotlight.with(this).closeSpotlight()
+            spotlight = false
         } else {
             super.onBackPressed()
         }

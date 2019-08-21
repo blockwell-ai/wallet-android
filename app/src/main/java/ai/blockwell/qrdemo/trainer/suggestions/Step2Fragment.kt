@@ -20,10 +20,10 @@ class Step2Fragment : StepFragment() {
     }
 
     override fun submit() {
-        val text = text.text.toString()
+        val text = textView.text.toString()
 
         if (text.isEmpty()) {
-            text.error = "Please enter a name"
+            textView.error = "Please enter a name"
             return
         }
 

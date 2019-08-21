@@ -25,10 +25,11 @@ class VotingArgumentView(context: Context, val arg: Argument, val tx: TxResponse
     override val value: ArgumentValue
         get() = StringArgumentValue(suggestion.index.toString())
 
-    public var suggestion = Suggestion(-1, "", 0)
+    var suggestion = Suggestion(-1, "", 0)
         private set
 
-    private var readOnly = false
+    var readOnly = false
+        private set
 
     init {
         context.layoutInflater.inflate(R.layout.view_voting_argument, this, true)
@@ -42,6 +43,7 @@ class VotingArgumentView(context: Context, val arg: Argument, val tx: TxResponse
             loadSuggestion(arg.value.getValue().toInt())
         } else {
             layout.isClickable = true
+            empty()
         }
     }
 
@@ -49,10 +51,12 @@ class VotingArgumentView(context: Context, val arg: Argument, val tx: TxResponse
         suggestion = sugg
 
         render(sugg)
+        validate()
     }
 
     private fun render(sugg: Suggestion) {
         suggestion_text.text = sugg.text
+        suggestion_text.textColorResource = R.color.colorText
 
         if (sugg.tag.isNotEmpty()) {
             tagView.visibility = View.VISIBLE
@@ -62,12 +66,20 @@ class VotingArgumentView(context: Context, val arg: Argument, val tx: TxResponse
         }
     }
 
+    private fun empty() {
+        tagView.visibility = View.GONE
+        suggestion_text.text = "Tap here to select what to vote for"
+        suggestion_text.textColorResource = R.color.link
+    }
+
     override fun validate(): Boolean {
         return if (suggestion.index == -1) {
             help.textColorResource = R.color.error
             help.text = "Select what you're voting for by tapping here"
             false
         } else {
+            help.textColorResource = R.color.colorHelper
+            help.text = arg.help
             true
         }
     }
