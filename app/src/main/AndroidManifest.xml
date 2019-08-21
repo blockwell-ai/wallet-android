@@ -5,7 +5,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".WalletApplication"
@@ -56,7 +56,20 @@
             android:name=".qr.TxSuccessActivity"
             android:screenOrientation="portrait"
             android:label="@string/login" />
-        <activity android:name=".qr.TxActivity" />
+        <activity android:name=".qr.TxActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="qr.blockwell.ai"
+                    android:pathPattern="/......" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".WalletActivity"
             android:label="@string/my_wallet"

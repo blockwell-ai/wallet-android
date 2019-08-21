@@ -45,7 +45,12 @@ class TxActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        url = Uri.parse(intent.getStringExtra("url"))
+        val data = intent.data
+        if (intent.hasExtra("url")) {
+            url = Uri.parse(intent.getStringExtra("url"))
+        } else if (data != null) {
+            url = data
+        }
 
         accept.setOnClickListener { submit() }
         cancel.setOnClickListener { finish() }
