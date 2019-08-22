@@ -1,7 +1,9 @@
 package ai.blockwell.qrdemo.qr
 
+import ai.blockwell.qrdemo.LoginActivity
 import ai.blockwell.qrdemo.R
 import ai.blockwell.qrdemo.WebViewActivity
+import ai.blockwell.qrdemo.api.Auth
 import ai.blockwell.qrdemo.api.TxResponse
 import ai.blockwell.qrdemo.qr.view.ArgumentView
 import ai.blockwell.qrdemo.qr.view.InputArgumentView
@@ -26,6 +28,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.*
 import org.koin.android.architecture.ext.viewModel
+import org.koin.android.ext.android.inject
 
 /**
  * Shows a QR code of the user's Ethereum address.
@@ -34,16 +37,13 @@ class TxActivity : AppCompatActivity() {
     val scope = MainScope()
     val model by viewModel<TxModel>()
     val votingModel by viewModel<VotingModel>()
+    val auth: Auth by inject()
     lateinit var url: Uri
 
     var arguments: List<ArgumentView> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tx)
-        title = "Transaction"
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val data = intent.data
         if (intent.hasExtra("url")) {
@@ -51,6 +51,18 @@ class TxActivity : AppCompatActivity() {
         } else if (data != null) {
             url = data
         }
+
+        if (!auth.isLoggedIn()) {
+            startActivity<LoginActivity>("deepLink" to url.toString())
+            finish()
+            return
+        }
+
+        setContentView(R.layout.activity_tx)
+        title = "Transaction"
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
 
         accept.setOnClickListener { submit() }
         cancel.setOnClickListener { finish() }

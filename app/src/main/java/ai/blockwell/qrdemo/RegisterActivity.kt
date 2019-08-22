@@ -7,6 +7,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import ai.blockwell.qrdemo.api.Auth
 import ai.blockwell.qrdemo.data.DataStore
+import ai.blockwell.qrdemo.qr.TxActivity
 import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -21,11 +22,15 @@ class RegisterActivity : AppCompatActivity() {
     val auth: Auth by inject()
     val scope = MainScope()
 
+    var deepLink: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
         setTitle(R.string.register)
         register_description.text = getString(R.string.register_description, DataStore.tokenName)
+
+        deepLink = intent.getStringExtra("deepLink")
 
         password.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
@@ -37,7 +42,7 @@ class RegisterActivity : AppCompatActivity() {
 
         register.setOnClickListener { attemptRegister() }
         login.setOnClickListener {
-            startActivity<LoginActivity>()
+            startActivity<LoginActivity>("deepLink" to deepLink)
         }
 
         if (auth.getEmail().isNotEmpty()) {
@@ -68,7 +73,13 @@ class RegisterActivity : AppCompatActivity() {
             val result = auth.register(emailInput, passwordInput)
 
             result.fold({
-                startActivity(intentFor<WalletActivity>().clearTask().newTask())
+                val link = deepLink
+
+                if (link != null) {
+                    startActivity(intentFor<TxActivity>("url" to link).clearTask().newTask())
+                } else {
+                    startActivity(intentFor<WalletActivity>().clearTask().newTask())
+                }
             }, { error ->
                 val message = error.message
                 if (message != null) {
