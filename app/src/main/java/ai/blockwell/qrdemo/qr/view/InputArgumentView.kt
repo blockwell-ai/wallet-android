@@ -30,6 +30,8 @@ class InputArgumentView(context: Context, val arg: Argument) : FrameLayout(conte
             }
         }
 
+    var qrListener: (() -> Unit)? = null
+
     init {
         context.layoutInflater.inflate(R.layout.view_input_argument, this, true)
 
@@ -39,6 +41,12 @@ class InputArgumentView(context: Context, val arg: Argument) : FrameLayout(conte
         when (arg.type) {
             "address" -> {
                 input.textSize = 13f
+                qr.visibility = View.VISIBLE
+                input.setPadding(
+                        input.paddingLeft,
+                        input.paddingTop,
+                        qr.measuredWidth,
+                        input.paddingBottom)
             }
             "uint" -> {
                 if (arg.decimals ?: 0 > 0) {
@@ -63,6 +71,12 @@ class InputArgumentView(context: Context, val arg: Argument) : FrameLayout(conte
                     unit.measuredWidth + dip(10),
                     input.paddingBottom)
         }
+
+        qr.setOnClickListener { qrListener?.invoke() }
+    }
+
+    fun setValue(value: String) {
+        input.setText(value)
     }
 
     override fun validate(): Boolean {

@@ -1,8 +1,6 @@
 package ai.blockwell.qrdemo.qr
 
-import ai.blockwell.qrdemo.LoginActivity
-import ai.blockwell.qrdemo.R
-import ai.blockwell.qrdemo.WebViewActivity
+import ai.blockwell.qrdemo.*
 import ai.blockwell.qrdemo.api.Auth
 import ai.blockwell.qrdemo.api.TxResponse
 import ai.blockwell.qrdemo.qr.view.ArgumentView
@@ -76,8 +74,8 @@ class TxActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == SuggestionsActivity.REQUEST) {
-            if (resultCode == Activity.RESULT_OK && data != null) {
+        when (requestCode) {
+            SuggestionsActivity.REQUEST -> if (resultCode == Activity.RESULT_OK && data != null) {
                 val index = data.getIntExtra("index", -1)
                 val suggestion = data.getParcelableExtra<Suggestion>("suggestion")
                 if (index > -1 && index < arguments.size && suggestion != null) {
@@ -87,8 +85,16 @@ class TxActivity : AppCompatActivity() {
                     }
                 }
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
+            ScanQrActivity.REQUEST_CODE -> if (resultCode == Activity.RESULT_OK && data != null) {
+                val index = data.getIntExtra("index", -1)
+                if (index > -1 && index < arguments.size) {
+                    val view = arguments[index]
+                    if (view is InputArgumentView) {
+                        view.setValue(data.getStringExtra("address"))
+                    }
+                }
+            }
+            else -> super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
@@ -133,14 +139,15 @@ class TxActivity : AppCompatActivity() {
 
         arguments = tx.arguments.mapIndexed { index, it ->
             if (voting && index == 0) {
-                val thisIndex = index
                 val view = VotingArgumentView(this, it, tx, votingModel)
-                view.setOnClickListener { votingClick(thisIndex, view) }
-                view
+                view.setOnClickListener { votingClick(index, view) }
+                view as ArgumentView
             } else if (it.value != null) {
-                StaticArgumentView(this, it) as ArgumentView
+                StaticArgumentView(this, it)
             } else {
-                InputArgumentView(this, it) as ArgumentView
+                val view = InputArgumentView(this, it)
+                view.qrListener = { qrClick(index) }
+                view as ArgumentView
             }
         }
 
@@ -161,6 +168,12 @@ class TxActivity : AppCompatActivity() {
                     "contractId" to view.tx.contractId
             )
         }
+    }
+
+    private fun qrClick(index: Int) {
+        startActivityForResult<AddressQrActivity>(ScanQrActivity.REQUEST_CODE,
+                "index" to index
+        )
     }
 
     private fun submit() {

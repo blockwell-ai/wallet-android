@@ -40,6 +40,8 @@ abstract class ScanQrActivity : AppCompatActivity() {
          * Basic regex for an Ethereum address.
          */
         val ETH_REGEX = Regex("^0x[a-fA-F0-9]{40}$")
+
+        val ETH_PREFIXED_REGEX = Regex("^ethereum:(0x[a-f0-9]{40})$", RegexOption.IGNORE_CASE)
     }
 
     var codeScanner: CodeScanner? = null

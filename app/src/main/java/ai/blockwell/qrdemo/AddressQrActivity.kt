@@ -7,14 +7,27 @@ import org.jetbrains.anko.longToast
 
 class AddressQrActivity : ScanQrActivity() {
     override fun decodeCallback(result: Result) {
-        // Only accept the scan if it's an Ethereum address
-        if (ETH_REGEX.matches(result.text)) {
+
+        val match = ETH_PREFIXED_REGEX.find(result.text)
+        val address = when {
+            match != null -> match.groupValues[1]
+            ETH_REGEX.matches(result.text) -> result.text
+            else -> null
+        }
+
+        if (address != null) {
             val resultIntent = Intent()
-            resultIntent.putExtra("address", result.text)
+            resultIntent.putExtra("address", address)
+
+            if (intent.hasExtra("index")) {
+                resultIntent.putExtra("index", intent.getIntExtra("index", -1))
+            }
+
             setResult(Activity.RESULT_OK, resultIntent)
             finish()
         } else {
             longToast(R.string.qr_not_address)
+            codeScanner?.startPreview()
         }
     }
 }
