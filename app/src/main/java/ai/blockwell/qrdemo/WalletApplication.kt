@@ -4,11 +4,13 @@ import android.app.Application
 import com.chibatching.kotpref.Kotpref
 import com.chibatching.kotpref.gsonpref.gson
 import com.facebook.stetho.Stetho
+import com.github.ajalt.timberkt.Timber
 import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.stetho.StethoHook
 import com.google.gson.Gson
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.startKoin
+import timber.log.Timber.DebugTree
 
 @Suppress("unused")
 class WalletApplication : Application() {
@@ -31,5 +33,7 @@ class WalletApplication : Application() {
 
         // Need to inject this directly to Kotpref
         Kotpref.gson = get<Gson>()
+
+        Timber.plant(DebugTree())
     }
 }

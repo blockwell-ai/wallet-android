@@ -1,53 +1,55 @@
 package ai.blockwell.qrdemo.qr.view
 
-import android.content.Context
-import android.widget.FrameLayout
 import ai.blockwell.qrdemo.R
 import ai.blockwell.qrdemo.api.Argument
 import ai.blockwell.qrdemo.api.ArgumentValue
 import ai.blockwell.qrdemo.api.StringArgumentValue
 import android.annotation.SuppressLint
-import android.util.TypedValue.COMPLEX_UNIT_SP
-import android.widget.TextView
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.widget.TextViewCompat
+import android.content.Context
+import android.graphics.Typeface
+import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.view_static_argument.view.*
 import org.jetbrains.anko.layoutInflater
-import org.jetbrains.anko.lines
+import org.jetbrains.anko.textColorResource
+import org.jetbrains.anko.textResource
 import java.math.BigDecimal
 import java.text.DecimalFormat
 
 val format = DecimalFormat("#,###.######")
 
 @SuppressLint("ViewConstructor")
-class StaticArgumentView(context: Context, val arg: Argument) : FrameLayout(context), ArgumentView {
-    override val static = true
-
+class StaticArgumentView(context: Context, override val arg: Argument) : FrameLayout(context), ArgumentView {
     override val value: ArgumentValue
-        get() = arg.value ?: StringArgumentValue("")
+        get() = currentValue
+
+    private var currentValue: ArgumentValue = StringArgumentValue("")
 
     init {
         context.layoutInflater.inflate(R.layout.view_static_argument, this, true)
         label.text = arg.label
-
         if (arg.value != null) {
-            if (arg.value.isArray()) {
-                arg.value.getArray().forEach {
-                    layout.addView(textView(format(it)))
-                }
-            } else {
-                layout.addView(textView(format(arg.value.getValue())))
-            }
+            update(arg.value)
         }
     }
 
-    private fun textView(text: String): TextView {
-        val view = AppCompatTextView(context)
-        view.text = text
-        view.textSize = 16f
-        view.lines = 1
-        TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(view, 10, 16, 1, COMPLEX_UNIT_SP)
-        return view
+    override fun update(newValue: ArgumentValue) {
+        currentValue = newValue
+        textView.setTypeface(null, Typeface.NORMAL)
+        textView.textColorResource = R.color.colorText
+        textView.maxLines = 1
+
+        if (newValue.isArray()) {
+            textView.maxLines = 999
+            textView.text = newValue.getArray().joinToString("\n") { format(it) }
+        } else {
+            if (newValue.getValue().isEmpty()) {
+                textView.textResource = R.string.enter_value_in_form
+                textView.setTypeface(null, Typeface.ITALIC)
+                textView.textColorResource = R.color.colorHelper
+            } else {
+                textView.text = format(newValue.getValue())
+            }
+        }
     }
 
     private fun format(value: String): String {

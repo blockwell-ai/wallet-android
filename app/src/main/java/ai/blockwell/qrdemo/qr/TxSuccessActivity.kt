@@ -2,37 +2,30 @@ package ai.blockwell.qrdemo.qr
 
 import ai.blockwell.qrdemo.R
 import ai.blockwell.qrdemo.api.*
-import ai.blockwell.qrdemo.qr.view.StaticArgumentView
+import ai.blockwell.qrdemo.qr.view.QrStepView
 import ai.blockwell.qrdemo.qr.view.SuggestionCreatedView
-import ai.blockwell.qrdemo.qr.view.VotingArgumentView
 import ai.blockwell.qrdemo.qr.view.WinningsView
 import ai.blockwell.qrdemo.viewmodel.TxModel
 import ai.blockwell.qrdemo.viewmodel.VotingModel
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment.DIRECTORY_DOWNLOADS
-import android.os.Environment.DIRECTORY_PICTURES
 import android.os.PersistableBundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.github.ajalt.timberkt.Timber
 import kotlinx.android.synthetic.main.activity_tx_success.*
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.longToast
-import org.jetbrains.anko.textColorResource
 import org.jetbrains.anko.textResource
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
@@ -47,10 +40,12 @@ class TxSuccessActivity : AppCompatActivity() {
     val votingModel by viewModel<VotingModel>()
     val client by inject<ApiClient>()
 
+    var stepViews: List<QrStepView> = listOf()
+
     // The parent job for all background work this activity subscribes to
     var job: Job? = null
 
-    var txStatus: TransactionStatusResponse? = null
+    var txStatus: ArrayList<TransactionStatusResponse> = arrayListOf()
     var qr: CreateQrResponse? = null
     var qrUri: Uri? = null
 
@@ -62,9 +57,11 @@ class TxSuccessActivity : AppCompatActivity() {
             try {
                 qr = getParcelable("qr")
                 qrUri = getParcelable("uri")
-                txStatus = getParcelable("tx")
+                getParcelableArrayList<TransactionStatusResponse>("tx")?.let {
+                    txStatus = it
+                }
             } catch (e: Exception) {
-                Log.e("TxSuccess", "Exception reading parcelable", e)
+                Timber.e(e) { "Exception reading parcelable" }
             }
         }
 
@@ -80,9 +77,7 @@ class TxSuccessActivity : AppCompatActivity() {
         qrUri?.let {
             outState.putParcelable("uri", it)
         }
-        txStatus?.let {
-            outState.putParcelable("tx", it)
-        }
+        outState.putParcelableArrayList("tx", txStatus)
 
         super.onSaveInstanceState(outState, outPersistentState)
     }
@@ -102,19 +97,20 @@ class TxSuccessActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
             123 -> {
-                txStatus?.let { tx ->
-                    tx.events?.filterNotNull()?.let { list ->
-                        list.filter { it.event == "SuggestionCreated" }
-                                .forEach {
-                                    // If request is cancelled, the result arrays are empty.
-                                    if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                                        showSuggestion(tx, it)
-                                    } else {
-                                        renderSuggestion(it, qr)
-                                    }
-                                }
-                    }
-                }
+                txStatus
+                        .forEach { tx ->
+                            tx.events?.filterNotNull()?.let { list ->
+                                list.filter { it.event == "SuggestionCreated" }
+                                        .forEach {
+                                            // If request is cancelled, the result arrays are empty.
+                                            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                                                showSuggestion(tx, it)
+                                            } else {
+                                                renderSuggestion(it, qr)
+                                            }
+                                        }
+                            }
+                        }
             }
             else -> {
                 // Ignore all other requests.
@@ -124,7 +120,7 @@ class TxSuccessActivity : AppCompatActivity() {
     }
 
     private fun update(tx: TxResponse) {
-        title = tx.method
+        title = tx.title ?: tx.steps.last().method
 
         if (!tx.creator.isNullOrEmpty()) {
             val spannable = SpannableStringBuilder(getString(R.string.requested_tx, tx.creator))
@@ -135,72 +131,85 @@ class TxSuccessActivity : AppCompatActivity() {
         } else {
             description.textResource = R.string.requested_tx_no_creator
         }
-        function.text = tx.method
-        contract.text = tx.address
 
-        arguments.removeAllViews()
+        preview.removeAllViews()
 
-        val voting = tx.method == "vote" && tx.arguments.size == 2
-
-        tx.arguments.mapIndexed { index, it ->
-            val view: View = if (voting && index == 0) {
-                VotingArgumentView(this, it, tx, votingModel)
-            } else {
-                StaticArgumentView(this, it)
-            }
-
-            arguments.addView(view)
+        stepViews = tx.steps.map { step ->
+            val view = QrStepView(this, tx, step, votingModel)
+            view.update(mapOf())
+            preview.addView(view)
+            view
         }
 
-        val txId = tx.transactionId
-
-        if (txId != null) {
-            subscribeToUpdates(txId)
-        } else {
-            longToast(R.string.unknown_error)
-        }
+        loadStatuses()
     }
 
-    private fun subscribeToUpdates(txId: String) {
-        job?.cancel()
+    private fun loadStatuses() {
+        Timber.d { "Going in to load statuses" }
 
         job = scope.launch {
-            model.getTxStatus(txId).channel.consumeEach { tx ->
-                txStatus = tx
-                tx.transactionHash?.let { hash ->
-                    etherscan.setText(R.string.view_on_etherscan)
-                    etherscan.textColorResource = R.color.link
-                    etherscan.setOnClickListener { _ ->
-                        val webpage = Uri.parse(Etherscan.tx(tx.network, hash))
-                        val intent = Intent(Intent.ACTION_VIEW, webpage)
-                        if (intent.resolveActivity(packageManager) != null) {
-                            startActivity(intent)
-                        }
-                    }
+            for ((index, view) in stepViews.withIndex()) {
+                Timber.d { "Loading status for index $index with ${view.step.transactionId}" }
+                if (txStatus.size > index) {
+                    view.updateStatus(txStatus[index])
+                    Timber.d { "Already had cached status" }
+                    continue
                 }
 
-                if (tx.status == "completed") {
-                    status.setText(R.string.confirmed)
-                    status.textColorResource = R.color.success
-                    progress.visibility = View.INVISIBLE
+                if (!isActive) {
+                    Timber.d { "Coroutine not active, breaking" }
+                    break
+                }
 
-                    tx.events
-                            ?.filterNotNull()
-                            ?.let { events ->
-                                events.filter { it.event == "ItemDropped" || it.event == "TokenWin" }
-                                        .let { list ->
-                                            if (list.isNotEmpty()) {
-                                                showWinnings(tx, list)
+                if (view.step.transactionId != null) {
+                    do {
+                        Timber.d { "Loading TX status" }
+                        val result = model.getTxStatus(view.step.transactionId)
+                        val value = result.fold({ tx ->
+                            Timber.d { "Received a tx status: ${tx.status}" }
+                            view.updateStatus(tx)
+                            when {
+                                tx.status == "completed" -> {
+                                    tx.events
+                                            ?.filterNotNull()
+                                            ?.let { events ->
+                                                events.filter { it.event == "ItemDropped" || it.event == "TokenWin" }
+                                                        .let { list ->
+                                                            if (list.isNotEmpty()) {
+                                                                showWinnings(tx, list)
+                                                            }
+                                                        }
+
+                                                events.filter { it.event == "SuggestionCreated" }
+                                                        .forEach {
+                                                            showSuggestion(tx, it)
+                                                        }
                                             }
-                                        }
-
-                                events.filter { it.event == "SuggestionCreated" }
-                                        .forEach {
-                                            showSuggestion(tx, it)
-                                        }
+                                    tx
+                                }
+                                tx.status == "error" -> {
+                                    alert(getString(R.string.transaction_failed) + tx.error).show()
+                                    tx
+                                }
+                                else -> null
                             }
-                } else if (tx.status == "error") {
-                    alert(getString(R.string.transfer_failed) + tx.error).show()
+                        }, {
+                            Timber.e(it) { "Exception retrieving transaction status" }
+                            null
+                        })
+
+                        if (value == null) {
+                            try {
+                                delay(5000)
+                            } catch (e: CancellationException) {
+                                Timber.d(e) { "Delay cancelled" }
+                            }
+                        } else {
+                            txStatus.add(value)
+                        }
+                    } while (isActive && value == null)
+                } else {
+                    longToast(R.string.unknown_error)
                 }
             }
         }

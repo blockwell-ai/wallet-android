@@ -1,12 +1,8 @@
 package ai.blockwell.qrdemo.qr
 
 import ai.blockwell.qrdemo.*
-import ai.blockwell.qrdemo.api.Auth
-import ai.blockwell.qrdemo.api.TxResponse
-import ai.blockwell.qrdemo.qr.view.ArgumentView
-import ai.blockwell.qrdemo.qr.view.InputArgumentView
-import ai.blockwell.qrdemo.qr.view.StaticArgumentView
-import ai.blockwell.qrdemo.qr.view.VotingArgumentView
+import ai.blockwell.qrdemo.api.*
+import ai.blockwell.qrdemo.qr.view.*
 import ai.blockwell.qrdemo.trainer.suggestions.Suggestion
 import ai.blockwell.qrdemo.viewmodel.TxModel
 import ai.blockwell.qrdemo.viewmodel.VotingModel
@@ -19,7 +15,6 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_tx.*
 import kotlinx.coroutines.MainScope
@@ -38,7 +33,8 @@ class TxActivity : AppCompatActivity() {
     val auth: Auth by inject()
     lateinit var url: Uri
 
-    var arguments: List<ArgumentView> = listOf()
+    var stepViews: List<QrStepView> = listOf()
+    var dynamicViews: List<DynamicView> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +57,6 @@ class TxActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-
         accept.setOnClickListener { submit() }
         cancel.setOnClickListener { finish() }
 
@@ -76,19 +71,19 @@ class TxActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             SuggestionsActivity.REQUEST -> if (resultCode == Activity.RESULT_OK && data != null) {
-                val index = data.getIntExtra("index", -1)
+                val name = data.getStringExtra("name")
+                val dynamicView = dynamicViews.find { it.dynamic.name == name }
                 val suggestion = data.getParcelableExtra<Suggestion>("suggestion")
-                if (index > -1 && index < arguments.size && suggestion != null) {
-                    val view = arguments[index]
-                    if (view is VotingArgumentView) {
-                        view.setSuggestion(suggestion)
+                if (name != null && dynamicView != null && suggestion != null) {
+                    if (dynamicView is InputSuggestionView) {
+                        dynamicView.setSuggestion(suggestion)
                     }
                 }
             }
             ScanQrActivity.REQUEST_CODE -> if (resultCode == Activity.RESULT_OK && data != null) {
                 val index = data.getIntExtra("index", -1)
-                if (index > -1 && index < arguments.size) {
-                    val view = arguments[index]
+                if (index > -1 && index < dynamicViews.size) {
+                    val view = dynamicViews[index]
                     if (view is InputArgumentView) {
                         view.setValue(data.getStringExtra("address"))
                     }
@@ -101,7 +96,7 @@ class TxActivity : AppCompatActivity() {
     private fun load() {
         scope.launch {
             val result = model.getCode(url).await()
-            static_arguments.removeAllViews()
+            preview.removeAllViews()
             input_arguments.removeAllViews()
 
             result.fold({
@@ -132,60 +127,76 @@ class TxActivity : AppCompatActivity() {
         } else {
             description.visibility = View.GONE
         }
-        function.text = tx.method
-        contract.text = tx.address
 
-        val voting = tx.method == "vote" && tx.arguments.size == 2
+        if (tx.title != null) {
+            code_title.text = tx.title
+        } else {
+            code_title.visibility = View.GONE
+        }
 
-        arguments = tx.arguments.mapIndexed { index, it ->
-            if (voting && index == 0) {
-                val view = VotingArgumentView(this, it, tx, votingModel)
-                view.setOnClickListener { votingClick(index, view) }
-                view as ArgumentView
-            } else if (it.value != null) {
-                StaticArgumentView(this, it)
+        stepViews = tx.steps.map { step ->
+            val view = QrStepView(this, tx, step, votingModel)
+            view.update(mapOf())
+            preview.addView(view)
+            view
+        }
+
+        dynamicViews = tx.dynamic.map {
+            val view: DynamicView = if (it.type == "suggestion") {
+                val view = InputSuggestionView(this, it, tx, votingModel)
+                view.setOnClickListener { _ -> votingClick(it) }
+                view
             } else {
                 val view = InputArgumentView(this, it)
-                view.qrListener = { qrClick(index) }
-                view as ArgumentView
+                view.qrListener = { qrClick(it) }
+                view
             }
+            input_arguments.addView(view as View)
+
+            view.setInputListener { dynamic, value ->
+                updatePreview(dynamic, value)
+            }
+
+            view
         }
 
-        arguments.forEach {
-            if (it.static) {
-                static_arguments.addView(it as ViewGroup)
-            } else {
-                please_fill.visibility = View.VISIBLE
-                input_arguments.addView(it as ViewGroup)
-            }
+        if (stepViews.size > 1) {
+            multiple_steps.visibility = View.VISIBLE
+        }
+        if (dynamicViews.isEmpty()) {
+            please_fill.visibility = View.GONE
+            input_arguments.visibility = View.GONE
         }
     }
 
-    private fun votingClick(index: Int, view: VotingArgumentView) {
-        if (!view.readOnly) {
-            startActivityForResult<SuggestionsActivity>(SuggestionsActivity.REQUEST,
-                    "index" to index,
-                    "contractId" to view.tx.contractId
-            )
+    private fun updatePreview(dynamic: Dynamic, value: ArgumentValue) {
+        for (view in stepViews) {
+            view.updateOne(dynamic.name, value)
         }
     }
 
-    private fun qrClick(index: Int) {
+    private fun votingClick(dynamic: Dynamic) {
+        startActivityForResult<SuggestionsActivity>(SuggestionsActivity.REQUEST,
+                "name" to dynamic.name,
+                "contractId" to dynamic.contractId
+        )
+    }
+
+    private fun qrClick(dynamic: Dynamic) {
         startActivityForResult<AddressQrActivity>(ScanQrActivity.REQUEST_CODE,
-                "index" to index
+                "name" to dynamic.name
         )
     }
 
     private fun submit() {
         scope.launch {
-            if (arguments.find { !it.validate() } == null) {
+            if (!dynamicViews.map { it.validate() }.contains(false)) {
                 accept.isEnabled = false
                 cancel.isEnabled = false
                 progress.visibility = View.VISIBLE
                 accept.text = ""
 
-                val values = arguments.map { it.value }
-
+                val values = dynamicViews.map { it.dynamic.name to it.value }.toMap()
                 val result = model.submitCode(url, values).await()
 
                 result.fold({

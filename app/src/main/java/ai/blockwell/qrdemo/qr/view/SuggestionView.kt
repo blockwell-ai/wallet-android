@@ -1,7 +1,7 @@
 package ai.blockwell.qrdemo.qr.view
 
 import ai.blockwell.qrdemo.R
-import ai.blockwell.qrdemo.api.*
+import ai.blockwell.qrdemo.api.TxResponse
 import ai.blockwell.qrdemo.trainer.suggestions.Suggestion
 import ai.blockwell.qrdemo.viewmodel.VotingModel
 import android.annotation.SuppressLint
@@ -16,45 +16,26 @@ import org.jetbrains.anko.layoutInflater
 import org.jetbrains.anko.textColorResource
 
 @SuppressLint("ViewConstructor")
-class VotingArgumentView(context: Context, val arg: Argument, val tx: TxResponse, val model: VotingModel) : FrameLayout(context), ArgumentView {
-    override val static: Boolean
-        get() = readOnly
-
+abstract class SuggestionView(context: Context, val tx: TxResponse, val model: VotingModel) : FrameLayout(context) {
     val scope = MainScope()
-
-    override val value: ArgumentValue
-        get() = StringArgumentValue(suggestion.index.toString())
 
     var suggestion = Suggestion(-1, "", 0)
         private set
 
-    var readOnly = false
-        private set
+    lateinit var contractId: String
 
     init {
         context.layoutInflater.inflate(R.layout.view_voting_argument, this, true)
-
-        label.text = arg.label
-        help.text = arg.help
-
-        if (arg.value != null) {
-            readOnly = true
-
-            loadSuggestion(arg.value.getValue().toInt())
-        } else {
-            layout.isClickable = true
-            empty()
-        }
     }
 
-    fun setSuggestion(sugg: Suggestion) {
+    open fun setSuggestion(sugg: Suggestion) {
         suggestion = sugg
 
         render(sugg)
         validate()
     }
 
-    private fun render(sugg: Suggestion) {
+    protected open fun render(sugg: Suggestion) {
         suggestion_text.text = sugg.text
         suggestion_text.textColorResource = R.color.colorText
 
@@ -66,31 +47,19 @@ class VotingArgumentView(context: Context, val arg: Argument, val tx: TxResponse
         }
     }
 
-    private fun empty() {
-        tagView.visibility = View.GONE
-        suggestion_text.text = "Tap here to select what to vote for"
-        suggestion_text.textColorResource = R.color.link
-    }
+    abstract fun empty()
 
-    override fun validate(): Boolean {
-        return if (suggestion.index == -1) {
-            help.textColorResource = R.color.error
-            help.text = "Select what you're voting for by tapping here"
-            false
-        } else {
-            help.textColorResource = R.color.colorHelper
-            help.text = arg.help
-            true
-        }
+    open fun validate(): Boolean {
+        return true
     }
 
     override fun setOnClickListener(l: OnClickListener?) {
         layout.setOnClickListener(l)
     }
 
-    private fun loadSuggestion(suggestionId: Int) {
+    protected fun loadSuggestion(suggestionId: Int) {
         scope.launch {
-            val result = model.getSuggestion(tx.contractId, suggestionId).await()
+            val result = model.getSuggestion(contractId, suggestionId).await()
 
             result.fold({
                 setSuggestion(it)

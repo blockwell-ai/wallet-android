@@ -1,10 +1,12 @@
 package ai.blockwell.qrdemo.api
 
 import ai.blockwell.qrdemo.data.DataStore
+import ai.blockwell.qrdemo.trainer.suggestions.Suggestion
 import ai.blockwell.qrdemo.utils.ArgumentValueTypeAdapter
 import android.os.Parcelable
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonElement
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +34,7 @@ class Tx(val client: ApiClient) {
         response
     }
 
-    suspend fun submit(shortcode: String, params: String, values: List<ArgumentValue>) = withContext(Dispatchers.Default) {
+    suspend fun submit(shortcode: String, params: String, values: Map<String, ArgumentValue>) = withContext(Dispatchers.Default) {
         val path = if (params.isEmpty()) {
             shortcode
         } else {
@@ -53,14 +55,12 @@ class Tx(val client: ApiClient) {
 data class TxResponse(
         val transactionId: String?,
         val shortcode: String,
-        val contractId: String,
-        val method: String,
+        val title: String?,
         val description: String?,
         val creator: String?,
-        val arguments: List<Argument>,
-        val address: String?,
-        val confirmationLink: String?
-
+        val confirmationLink: String?,
+        val steps: List<Step>,
+        val dynamic: List<Dynamic>
 ) : Parcelable {
     object Deserializer : ResponseDeserializable<TxResponse> {
         override fun deserialize(content: String) = gson.fromJson(content, TxResponse::class.java)
@@ -68,17 +68,40 @@ data class TxResponse(
 }
 
 @Parcelize
+data class Step(
+        val contractId: String,
+        val address: String,
+        val method: String,
+        val arguments: List<Argument>,
+        val transactionId: String?
+) : Parcelable
+
+@Parcelize
+data class Dynamic(
+        val label: String,
+        val name: String,
+        val type: String,
+        val help: String?,
+        val contractId: String?
+) : Parcelable
+
+@Parcelize
 data class Argument(
         val label: String,
+        val name: String,
         val type: String,
-        val dynamic: String? = null,
         val decimals: Int? = null,
         val symbol: String? = null,
         val value: @RawValue ArgumentValue? = null,
-        val help: String? = null,
-        val name: String? = null
+        val source: Source? = null
 ) : Parcelable
 
+@Parcelize
+data class Source(
+        val type: String,
+        val name: String,
+        val parameter: String? = null
+) : Parcelable
 
 abstract class ArgumentValue {
     open fun isArray() = false
@@ -100,24 +123,19 @@ data class ArrayArgumentValue(private val values: List<String>) : ArgumentValue(
     }
 }
 
+@Parcelize
+data class SuggestionArgumentValue(val suggestion: Suggestion) : ArgumentValue(), Parcelable {
+    override fun getValue() = suggestion.index.toString()
+}
+
 data class SubmitRequest(
-        val arguments: List<ArgumentValue>
+        val dynamics: Map<String, ArgumentValue>
 )
 
-/*
-        contractId: Joi.string().uuid(),
-        method: Joi.string(),
-        description: Joi.string().optional().allow(""),
-        creator: Joi.string().optional().allow(""),
-        confirmationLink: Joi.string().optional().allow(""),
-        ctaLabel: Joi.string().optional().allow(""),
-        ctaLink: Joi.string().optional().allow(""),
-        arguments: Joi.array().optional(),
- */
 data class CreateQrRequest(
-        val contractId: String,
-        val method: String,
-        val arguments: List<Argument> = emptyList()
+        val title: String,
+        val steps: List<Step> = emptyList(),
+        val dynamic: List<Dynamic> = emptyList()
 )
 
 @Parcelize
