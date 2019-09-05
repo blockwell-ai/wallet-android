@@ -19,7 +19,7 @@ class SuggestionsActivity : AppCompatActivity() {
 
     val scope = MainScope()
     val votingModel by viewModel<VotingModel>()
-    var index = -1
+    var name = ""
     var contractId = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,10 +31,10 @@ class SuggestionsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setSubtitle(R.string.select_suggestion)
 
-        index = intent.getIntExtra("index", -1)
+        name = intent.getStringExtra("name") ?: ""
         contractId = intent.getStringExtra("contractId") ?: ""
 
-        if (index == -1 || contractId.isEmpty()) {
+        if (name.isEmpty() || contractId.isEmpty()) {
             val dialog = alert(R.string.unknown_error)
             dialog.onCancelled { finish() }
             dialog.show()
@@ -42,7 +42,7 @@ class SuggestionsActivity : AppCompatActivity() {
             load()
             suggestions_list.setClickListener {
                 val result = Intent("ai.blockwell.qrdemo.SUGGESTION_RESULT")
-                result.putExtra("index", index)
+                result.putExtra("name", name)
                 result.putExtra("suggestion", it)
                 setResult(Activity.RESULT_OK, result)
                 finish()

@@ -19,8 +19,8 @@ class AddressQrActivity : ScanQrActivity() {
             val resultIntent = Intent()
             resultIntent.putExtra("address", address)
 
-            if (intent.hasExtra("index")) {
-                resultIntent.putExtra("index", intent.getIntExtra("index", -1))
+            if (intent.hasExtra("name")) {
+                resultIntent.putExtra("name", intent.getStringExtra("name"))
             }
 
             setResult(Activity.RESULT_OK, resultIntent)

@@ -81,11 +81,11 @@ class TxActivity : AppCompatActivity() {
                 }
             }
             ScanQrActivity.REQUEST_CODE -> if (resultCode == Activity.RESULT_OK && data != null) {
-                val index = data.getIntExtra("index", -1)
-                if (index > -1 && index < dynamicViews.size) {
-                    val view = dynamicViews[index]
-                    if (view is InputArgumentView) {
-                        view.setValue(data.getStringExtra("address"))
+                val name = data.getStringExtra("name")
+                val dynamicView = dynamicViews.find { it.dynamic.name == name }
+                if (name != null && dynamicView != null) {
+                    if (dynamicView is InputArgumentView) {
+                        dynamicView.setValue(data.getStringExtra("address"))
                     }
                 }
             }

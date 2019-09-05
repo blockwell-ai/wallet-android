@@ -8,8 +8,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
 import android.widget.FrameLayout
+import androidx.core.widget.TextViewCompat
 import kotlinx.android.synthetic.main.view_static_argument.view.*
 import org.jetbrains.anko.layoutInflater
+import org.jetbrains.anko.lines
 import org.jetbrains.anko.textColorResource
 import org.jetbrains.anko.textResource
 import java.math.BigDecimal
@@ -36,10 +38,11 @@ class StaticArgumentView(context: Context, override val arg: Argument) : FrameLa
         currentValue = newValue
         textView.setTypeface(null, Typeface.NORMAL)
         textView.textColorResource = R.color.colorText
-        textView.maxLines = 1
+        textView.lines = 1
 
         if (newValue.isArray()) {
             textView.maxLines = 999
+            textView.minLines = 1
             textView.text = newValue.getArray().joinToString("\n") { format(it) }
         } else {
             if (newValue.getValue().isEmpty()) {
@@ -48,6 +51,7 @@ class StaticArgumentView(context: Context, override val arg: Argument) : FrameLa
                 textView.textColorResource = R.color.colorHelper
             } else {
                 textView.text = format(newValue.getValue())
+                TextViewCompat.setAutoSizeTextTypeWithDefaults(textView, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM)
             }
         }
     }
