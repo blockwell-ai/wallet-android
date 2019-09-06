@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="?selectableItemBackground"
-    android:padding="16dp">
+    android:paddingTop="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
