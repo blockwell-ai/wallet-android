@@ -25,6 +25,7 @@ import com.github.ajalt.timberkt.Timber
 import kotlinx.android.synthetic.main.activity_tx_success.*
 import kotlinx.coroutines.*
 import org.jetbrains.anko.alert
+import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.textResource
 import org.koin.android.architecture.ext.viewModel
@@ -122,21 +123,18 @@ class TxSuccessActivity : AppCompatActivity() {
     private fun update(tx: TxResponse) {
         title = tx.title ?: tx.steps.last().method
 
-        if (!tx.creator.isNullOrEmpty()) {
-            val spannable = SpannableStringBuilder(getString(R.string.requested_tx, tx.creator))
-            val bold = StyleSpan(Typeface.BOLD)
-            spannable.setSpan(bold, 30, 30 + tx.creator.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-
-            description.text = spannable
-        } else {
-            description.textResource = R.string.requested_tx_no_creator
-        }
-
         preview.removeAllViews()
 
-        stepViews = tx.steps.map { step ->
+        stepViews = tx.steps.mapIndexed { index, step ->
             val view = QrStepView(this, tx, step, votingModel)
             view.update(mapOf())
+            view.backgroundResource = when (index) {
+                0 -> R.drawable.bg_func1
+                1 -> R.drawable.bg_func2
+                2 -> R.drawable.bg_func2
+                3 -> R.drawable.bg_func2
+                else -> R.drawable.bg_func1
+            }
             preview.addView(view)
             view
         }

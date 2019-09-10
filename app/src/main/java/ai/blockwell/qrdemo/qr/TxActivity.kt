@@ -59,6 +59,15 @@ class TxActivity : AppCompatActivity() {
 
         accept.setOnClickListener { submit() }
         cancel.setOnClickListener { finish() }
+        collapsing_title.setOnClickListener {
+            if (collapsing.visibility == View.GONE) {
+                collapsing.visibility = View.VISIBLE
+                collapsing_arrow.toggle()
+            } else {
+                collapsing.visibility = View.GONE
+                collapsing_arrow.toggle()
+            }
+        }
 
         load()
     }
@@ -113,15 +122,6 @@ class TxActivity : AppCompatActivity() {
     }
 
     private fun render(tx: TxResponse) {
-        if (!tx.creator.isNullOrEmpty()) {
-            val spannable = SpannableStringBuilder(getString(R.string.requesting_tx, tx.creator))
-            val bold = StyleSpan(Typeface.BOLD)
-            spannable.setSpan(bold, 0, tx.creator.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-
-            creator.text = spannable
-        } else {
-            creator.textResource = R.string.requesting_tx_no_creator
-        }
         if (tx.description != null) {
             description.text = tx.description
         } else {
@@ -134,10 +134,18 @@ class TxActivity : AppCompatActivity() {
             code_title.visibility = View.GONE
         }
 
-        stepViews = tx.steps.map { step ->
+        stepViews = tx.steps.mapIndexed { index, step ->
             val view = QrStepView(this, tx, step, votingModel)
             view.update(mapOf())
             preview.addView(view)
+            view.backgroundResource = when (index) {
+                0 -> R.drawable.bg_func1
+                1 -> R.drawable.bg_func2
+                2 -> R.drawable.bg_func2
+                3 -> R.drawable.bg_func2
+                else -> R.drawable.bg_func1
+            }
+
             view
         }
 
@@ -164,7 +172,6 @@ class TxActivity : AppCompatActivity() {
             multiple_steps.visibility = View.VISIBLE
         }
         if (dynamicViews.isEmpty()) {
-            please_fill.visibility = View.GONE
             input_arguments.visibility = View.GONE
         }
     }

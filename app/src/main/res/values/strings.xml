@@ -113,4 +113,5 @@
     <string name="error">Error</string>
     <string name="multiple_steps">This transaction has multiple steps which will be submitted in order.</string>
     <string name="transaction_preview">Transaction Preview</string>
+    <string name="success">Success</string>
 </resources>

@@ -40,13 +40,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="@string/transaction_needs_accepted"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
             android:text="@string/transaction_details"
             android:textColor="@color/colorPrimary"
             android:textSize="16sp" />

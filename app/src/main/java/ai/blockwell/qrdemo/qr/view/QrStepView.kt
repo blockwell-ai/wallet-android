@@ -90,7 +90,7 @@ class QrStepView(context: Context, val code: TxResponse, val step: Step, val vot
 
     fun updateStatus(tx: TransactionStatusResponse) {
         tx.transactionHash?.let { hash ->
-            etherscan.setText(R.string.view_on_etherscan)
+            etherscan.visibility = View.VISIBLE
             etherscan.textColorResource = R.color.link
             etherscan.setOnClickListener {
                 val webpage = Uri.parse(Etherscan.tx(tx.network, hash))
@@ -102,9 +102,10 @@ class QrStepView(context: Context, val code: TxResponse, val step: Step, val vot
         }
         when (tx.status) {
             "completed" -> {
-                status.setText(R.string.confirmed)
+                status.setText(R.string.success)
                 status.textColorResource = R.color.success
                 progress.visibility = View.GONE
+                checkmark.visibility = View.VISIBLE
             }
             "error" -> {
                 statusError()
