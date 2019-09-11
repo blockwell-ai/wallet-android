@@ -12,7 +12,7 @@
         android:id="@+id/panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@color/toolbar"
         android:elevation="5dp"
         android:orientation="vertical">
 
@@ -23,7 +23,7 @@
             android:background="@color/transparent"
             app:navigationIcon="?attr/homeAsUpIndicator"
             app:title="@string/scan_qr_code"
-            app:titleTextColor="@color/primaryTextColor" />
+            app:titleTextColor="@color/toolbarText" />
 
         <TextView
             android:id="@+id/description"
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/activity_horizontal_margin"
             android:text="@string/scanner_description"
-            android:textColor="@color/faintBackground" />
+            android:textColor="@color/toolbarTextGreyed" />
 
     </LinearLayout>
 

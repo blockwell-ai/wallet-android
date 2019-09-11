@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Blockwell QR</string>
 
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -74,8 +73,6 @@
     <string name="open_token_trainer">Open Token Trainer</string>
     <string name="trainer_intro">This Token Trainer will create your own token and show you how you can make it your own. Select one of the Guided Options to get started.</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="token_minting">Token Minting</string>
     <string name="token_minting_description">Minting is a token feature that allows for creating more tokens, thereby increasing the total supply.</string>
     <string name="token_minting_description_2">To mint new tokens, minting must first be enabled. If you try to mint tokens without enabling it, the transaction will fail.</string>
@@ -114,4 +111,5 @@
     <string name="multiple_steps">This transaction has multiple steps which will be submitted in order.</string>
     <string name="transaction_preview">Transaction Preview</string>
     <string name="success">Success</string>
+    <string name="action_trainer">Token Trainer</string>
 </resources>

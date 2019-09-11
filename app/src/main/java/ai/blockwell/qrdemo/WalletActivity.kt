@@ -68,9 +68,6 @@ class WalletActivity : AppCompatActivity() {
             clipboardManager.primaryClip = clipData
             longToast(R.string.account_copied)
         }
-        token_trainer.setOnClickListener {
-            startActivity<TrainerActivity>()
-        }
 
         if (!DataStore.introShown) {
             recycler.doOnLayout {
@@ -120,6 +117,10 @@ class WalletActivity : AppCompatActivity() {
             }
             R.id.action_qr -> {
                 startActivity<TransactionQrActivity>()
+                true
+            }
+            R.id.action_trainer -> {
+                startActivity<TrainerActivity>()
                 true
             }
             R.id.action_licenses -> {

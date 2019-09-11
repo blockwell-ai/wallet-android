@@ -39,20 +39,20 @@ class TransferHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val value = transfer.value.toDecimals(DataStore.tokenDecimals)
         if (received) {
             view.direction.setText(R.string.received)
-            view.direction.textColorResource = R.color.colorAccent
+            view.direction.textColorResource = R.color.colorTextEmphasis
 
             view.value.text = value + " " + DataStore.tokenSymbol
-            view.value.textColorResource = R.color.colorAccent
+            view.value.textColorResource = R.color.colorTextEmphasis
 
             view.address.text = res.getString(R.string.transfer_address,
                     res.getString(R.string.from),
                     transfer.from)
         } else {
             view.direction.setText(R.string.sent)
-            view.direction.textColorResource = R.color.colorSecondary
+            view.direction.textColorResource = R.color.error
 
             view.value.text = "-" + value + " " + DataStore.tokenSymbol
-            view.value.textColorResource = R.color.colorSecondary
+            view.value.textColorResource = R.color.error
 
             view.address.text = res.getString(R.string.transfer_address,
                     res.getString(R.string.to),

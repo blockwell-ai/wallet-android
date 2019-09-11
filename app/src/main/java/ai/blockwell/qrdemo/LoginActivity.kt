@@ -26,6 +26,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        setSupportActionBar(toolbar)
         setTitle(R.string.login)
 
         deepLink = intent.getStringExtra("deepLink")

@@ -1,44 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/toolbar"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context="ai.blockwell.qrdemo.SendActivity">
+        android:orientation="vertical">
 
-    <LinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/activity_horizontal_margin">
 
-        <TextView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                android:text="@string/recipient_description"/>
+                android:text="@string/recipient_description" />
 
-        <com.google.android.material.textfield.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <AutoCompleteTextView
+                <AutoCompleteTextView
                     android:id="@+id/recipient"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/recipient"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:singleLine="true"/>
+                    android:singleLine="true" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <AutoCompleteTextView
+                <AutoCompleteTextView
                     android:id="@+id/value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -47,24 +64,24 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     android:imeActionLabel="@string/send"
-                    android:imeOptions="actionSend"/>
+                    android:imeOptions="actionSend" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <ProgressBar
+            <ProgressBar
                 android:id="@+id/send_progress"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:indeterminate="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"/>
+                android:visibility="invisible" />
 
-        <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/send"
-                style="?android:textAppearanceSmall"
+                android:theme="@style/ButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/send"
-                android:textStyle="bold"/>
-    </LinearLayout>
-</ScrollView>
+                android:text="@string/send" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -33,6 +33,7 @@ class SendActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_send)
+        setSupportActionBar(toolbar)
         title = getString(R.string.send_wallet_coins, DataStore.tokenName)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 

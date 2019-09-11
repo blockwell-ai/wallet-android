@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Suggestion Created"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorTextEmphasis"
         android:textSize="24sp" />
 
     <TextView
@@ -20,20 +20,16 @@
         android:layout_marginBottom="16dp"
         android:text="@string/suggestion_id" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/view_qr"
-        style="?android:textAppearanceSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="View Voting QR Code"
-        android:textStyle="bold" />
+        android:text="View Voting QR Code" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/share_qr"
-        style="?android:textAppearanceSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Share Voting QR Code"
-        android:textStyle="bold" />
+        android:text="Share Voting QR Code" />
 
 </LinearLayout>

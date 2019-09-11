@@ -8,6 +8,21 @@
     android:orientation="vertical"
     tools:context=".qr.TxActivity">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/toolbar"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -36,7 +51,6 @@
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:textSize="16sp"
                 tools:text="This is a description of a QR Code." />
 
@@ -45,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -78,8 +92,7 @@
                             android:id="@+id/collapsing_arrow"
                             android:layout_width="55dp"
                             android:layout_height="55dp"
-                            android:scaleType="center"
-                            />
+                            android:scaleType="center" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -113,7 +126,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background_light"
+        android:background="@color/contentBackground"
         android:baselineAligned="false"
         android:elevation="10dp"
         android:orientation="horizontal">
@@ -123,14 +136,13 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/cancel"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="?selectableItemBackground"
                 android:text="@string/cancel"
-                android:textColor="#F44336" />
+                android:textColor="@color/error" />
         </FrameLayout>
 
 
@@ -138,7 +150,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
-            
+
             <ProgressBar
                 android:id="@+id/progress"
                 android:layout_width="wrap_content"
@@ -146,14 +158,14 @@
                 android:layout_gravity="center"
                 android:indeterminate="true"
                 android:visibility="gone" />
-            <Button
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/accept"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="?selectableItemBackground"
                 android:text="@string/accept"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorTextEmphasis" />
         </FrameLayout>
     </LinearLayout>
 </LinearLayout>

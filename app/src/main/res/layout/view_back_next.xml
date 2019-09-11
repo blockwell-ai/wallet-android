@@ -26,13 +26,13 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_chevron_left"
-                android:tint="@color/primaryLightColor" />
+                android:tint="@color/colorTextEmphasis" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/back"
-                android:textColor="@color/primaryLightColor"
+                android:textColor="@color/colorTextEmphasis"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/next"
-                android:textColor="@color/primaryLightColor"
+                android:textColor="@color/colorTextEmphasis"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_chevron_right"
-                android:tint="@color/primaryLightColor" />
+                android:tint="@color/colorTextEmphasis" />
         </LinearLayout>
     </LinearLayout>
 </merge>

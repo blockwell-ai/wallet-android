@@ -17,11 +17,12 @@ public class QrActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_qr)
+        setSupportActionBar(toolbar)
         account_address.text = DataStore.accountAddress
 
         val size = (displayMetrics.widthPixels * 0.75).roundToInt()
         val bitmap = QRCode.from(DataStore.accountAddress)
-                .withColor(ContextCompat.getColor(this, R.color.colorPrimaryDark), ContextCompat.getColor(this, R.color.background_light))
+                .withColor(ContextCompat.getColor(this, R.color.colorTextEmphasis), ContextCompat.getColor(this, R.color.contentBackground))
                 .withSize(size, size)
                 .bitmap()
         qr_image.setImageBitmap(bitmap)

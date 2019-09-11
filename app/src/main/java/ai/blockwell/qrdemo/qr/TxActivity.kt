@@ -53,6 +53,7 @@ class TxActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_tx)
+        setSupportActionBar(toolbar)
         title = "Transaction"
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

@@ -59,7 +59,7 @@
                 android:layout_weight="1"
                 android:layout_marginBottom="4dp"
                 android:text="@string/pending_confirmation"
-                android:textColor="@color/secondaryLightColor"
+                android:textColor="@color/colorText"
                 android:textSize="18sp" />
             <TextView
                 android:id="@+id/etherscan"

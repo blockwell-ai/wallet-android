@@ -17,7 +17,7 @@
             android:id="@+id/label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorTextEmphasis"
             android:textSize="18sp"
             tools:text="Suggestion" />
 
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:textColor="@color/primaryTextColor"
+            android:textColor="@color/primaryText"
             android:background="@drawable/bg_tag"
             android:textSize="14sp"
             tools:text="IDEA" />

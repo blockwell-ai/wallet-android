@@ -21,8 +21,7 @@
             android:name=".trainer.TrainerActivity"
             android:label="@string/title_activity_trainer"
             android:parentActivityName=".WalletActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ai.blockwell.qrdemo.WalletActivity" />
@@ -31,8 +30,7 @@
             android:name=".generated.base.GeneratedActivity"
             android:label="@string/generated_fragments"
             android:parentActivityName=".trainer.TrainerActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ai.blockwell.qrdemo.trainer.TrainerActivity" />
@@ -73,23 +71,18 @@
         <activity
             android:name=".WalletActivity"
             android:label="@string/my_wallet"
-            android:parentActivityName=".WalletActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:parentActivityName=".WalletActivity" />
         <activity
             android:name=".QrActivity"
             android:label="@string/qr_code" />
         <activity android:name=".SendActivity" />
         <activity
             android:name=".AddressQrActivity"
-            android:parentActivityName=".SendActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:parentActivityName=".SendActivity" />
         <activity
             android:name=".qr.TransactionQrActivity"
-            android:parentActivityName=".WalletActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".qr.SuggestionsActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:parentActivityName=".WalletActivity" />
+        <activity android:name=".qr.SuggestionsActivity" />
         <activity
             android:name=".LicensesActivity"
             android:label="@string/open_source_licenses" />

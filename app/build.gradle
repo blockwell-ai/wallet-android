@@ -5,6 +5,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+config.keys().each {
+    if (project.hasProperty(it)) {
+        config.setProperty(it, project[it])
+    }
+}
+
 android {
     signingConfigs {
         release {
@@ -16,11 +22,11 @@ android {
     }
     compileSdkVersion 28
     defaultConfig {
-        applicationId "ai.blockwell.qrdemo"
+        applicationId "ai.blockwell.qr"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 22
-        versionName "1.6.1"
+        versionName "1.6.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         setProperty("archivesBaseName", config['APP_ID'] + "-" + "-v" + versionName)
     }
@@ -32,7 +38,16 @@ android {
 
             // From config.properties
             config.each { key, value ->
-                buildConfigField "String", key, '"' + value + '"'
+                if (!key.contains('.')) {
+                    buildConfigField "String", key, '"' + value + '"'
+                } else {
+                    def (type, name) = key.tokenize('.')
+                    if (type == 'color') {
+                        resValue("color", name, value)
+                    } else if (type == 'string') {
+                        resValue('string', name, value)
+                    }
+                }
             }
 
             buildConfigField("String", "API_BASEURL", "\"https://qr.lenswallet.io\"")
@@ -51,7 +66,16 @@ android {
 
             // From config.properties
             config.each { key, value ->
-                buildConfigField "String", key, '"' + value + '"'
+                if (!key.contains('.')) {
+                    buildConfigField "String", key, '"' + value + '"'
+                } else {
+                    def (type, name) = key.tokenize('.')
+                    if (type == 'color') {
+                        resValue("color", name, value)
+                    } else if (type == 'string') {
+                        resValue('string', name, value)
+                    }
+                }
             }
         }
     }

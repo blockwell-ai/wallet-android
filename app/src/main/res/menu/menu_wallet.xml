@@ -1,27 +1,30 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context="ai.blockwell.qrdemo.WalletActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ai.blockwell.qrdemo.WalletActivity">
     <item
-            android:id="@+id/action_qr"
-            android:title="@string/qr_code"
-            android:icon="@drawable/ic_qrcode"
-            app:showAsAction="ifRoom"/>
+        android:id="@+id/action_qr"
+        android:title="@string/qr_code"
+        android:icon="@drawable/ic_qrcode"
+        app:showAsAction="ifRoom" />
     <item
-            android:id="@+id/action_refresh"
-            android:title="@string/action_refresh"
-            android:icon="@drawable/ic_refresh"
-            app:showAsAction="always"/>
+        android:id="@+id/action_refresh"
+        android:title="@string/action_refresh"
+        android:icon="@drawable/ic_refresh"
+        app:showAsAction="always" />
     <item
-            android:id="@+id/action_licenses"
-            android:title="@string/open_source_licenses"
-            android:icon="@android:drawable/ic_menu_help"
-            app:showAsAction="never"
-        />
+        android:id="@+id/action_trainer"
+        android:title="@string/action_trainer"
+        android:icon="@android:drawable/ic_menu_help"
+        app:showAsAction="never" />
     <item
-            android:id="@+id/action_signout"
-            android:title="@string/sign_out"
-            android:icon="@android:drawable/ic_menu_close_clear_cancel"
-            app:showAsAction="never"
-        />
+        android:id="@+id/action_licenses"
+        android:title="@string/open_source_licenses"
+        android:icon="@android:drawable/ic_menu_help"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_signout"
+        android:title="@string/sign_out"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        app:showAsAction="never" />
 </menu>
