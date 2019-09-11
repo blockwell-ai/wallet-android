@@ -71,13 +71,13 @@ class WalletActivity : AppCompatActivity() {
 
         if (!DataStore.introShown) {
             recycler.doOnLayout {
-                val x = displayMetrics.widthPixels - 112f * displayMetrics.density
-                val y = 52f * displayMetrics.density
+                val x = displayMetrics.widthPixels - 45 * displayMetrics.density
+                val y = displayMetrics.heightPixels - 45 * displayMetrics.density
                 Log.d("Overlay", "$x - $y")
                 val target = SimpleTarget.Builder(this)
                         .setPoint(x, y)
-                        .setOverlayPoint(16f * displayMetrics.density, 100f * displayMetrics.density)
-                        .setShape(Circle(30f * displayMetrics.density))
+                        .setOverlayPoint(16f * displayMetrics.density, y - 150f * displayMetrics.density)
+                        .setShape(Circle(45f * displayMetrics.density))
                         .setTitle("Scan QR Codes")
                         .setDescription("Easily perform transactions on the blockchain by scanning QR Codes.")
                         .build()
