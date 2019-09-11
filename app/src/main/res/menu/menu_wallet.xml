@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="ai.blockwell.qrdemo.WalletActivity">
     <item
-        android:id="@+id/action_qr"
-        android:title="@string/qr_code"
-        android:icon="@drawable/ic_qrcode"
+        android:id="@+id/action_send"
+        android:title="@string/send"
+        android:icon="@drawable/ic_send"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_refresh"

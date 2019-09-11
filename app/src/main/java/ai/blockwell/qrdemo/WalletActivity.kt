@@ -61,7 +61,7 @@ class WalletActivity : AppCompatActivity() {
         recycler.addItemDecoration(decorator)
 
         fab.setOnClickListener {
-            startActivity<SendActivity>()
+            startActivity<TransactionQrActivity>()
         }
         account_address.setOnClickListener {
             val clipData = ClipData.newPlainText("Account address", account_address.text)
@@ -115,8 +115,8 @@ class WalletActivity : AppCompatActivity() {
                 scope.launch { model.balance.refreshBalance() }
                 true
             }
-            R.id.action_qr -> {
-                startActivity<TransactionQrActivity>()
+            R.id.action_send -> {
+                startActivity<SendActivity>()
                 true
             }
             R.id.action_trainer -> {

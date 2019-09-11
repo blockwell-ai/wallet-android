@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="android:textColor">@color/colorText</item>
-        <item name="android:textColorSecondary">@color/faintBackground</item>
+        <item name="android:textColorSecondary">@color/colorText</item>
         <item name="android:navigationBarColor">@color/toolbar</item>
         <item name="android:statusBarColor">@color/toolbar</item>
         <item name="android:colorBackground">@color/contentBackground</item>
