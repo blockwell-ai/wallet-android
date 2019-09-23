@@ -70,10 +70,10 @@ data class TxResponse(
 @Parcelize
 data class Step(
         val contractId: String,
-        val address: String,
         val method: String,
         val arguments: List<Argument>,
-        val transactionId: String?
+        val transactionId: String?,
+        val address: String? = null
 ) : Parcelable
 
 @Parcelize

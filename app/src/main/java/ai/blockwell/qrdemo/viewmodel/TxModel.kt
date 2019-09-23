@@ -32,7 +32,7 @@ class TxModel(val client: ApiClient) : ViewModel() {
         return tx.create(CreateQrRequest(
                 "Vote",
                 listOf(
-                        Step(contractId, "", "vote", listOf(
+                        Step(contractId, "vote", listOf(
                                 Argument(
                                         "Suggestion",
                                         "suggestionId",

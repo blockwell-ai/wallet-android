@@ -60,7 +60,7 @@ class QrStepView(context: Context, val code: TxResponse, val step: Step, val vot
                                     "address" -> step.address
                                     else -> ""
                                 }
-                                view.update(StringArgumentValue(value))
+                                view.update(StringArgumentValue(value ?: ""))
                             } catch (e: Exception) {
                                 Timber.e(e) { "Exception getting steps data" }
                             }
