@@ -36,7 +36,7 @@ class TxModel(val client: ApiClient) : ViewModel() {
                                 Argument(
                                         "Suggestion",
                                         "suggestionId",
-                                        "uint",
+                                        "suggestion",
                                         value = StringArgumentValue(suggestionId.toString())
                                 ),
                                 Argument(
