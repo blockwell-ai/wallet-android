@@ -9,6 +9,7 @@ import android.content.Context
 import android.graphics.Typeface
 import android.widget.FrameLayout
 import androidx.core.widget.TextViewCompat
+import com.github.ajalt.timberkt.Timber
 import kotlinx.android.synthetic.main.view_static_argument.view.*
 import org.jetbrains.anko.layoutInflater
 import org.jetbrains.anko.lines
@@ -58,8 +59,13 @@ class StaticArgumentView(context: Context, override val arg: Argument) : FrameLa
 
     private fun format(value: String): String {
         val valueText = if (arg.decimals != null) {
-            val d = BigDecimal(value)
-            format.format(d)
+            try {
+                val d = BigDecimal(value)
+                format.format(d)
+            } catch (e: Exception) {
+                Timber.d(e)
+                "-"
+            }
         } else {
             value
         }
