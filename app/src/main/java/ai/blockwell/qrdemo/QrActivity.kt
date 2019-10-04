@@ -12,7 +12,7 @@ import kotlin.math.roundToInt
 /**
  * Shows a QR code of the user's Ethereum address.
  */
-public class QrActivity : AppCompatActivity() {
+class QrActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +21,7 @@ public class QrActivity : AppCompatActivity() {
         account_address.text = DataStore.accountAddress
 
         val size = (displayMetrics.widthPixels * 0.75).roundToInt()
-        val bitmap = QRCode.from(DataStore.accountAddress)
+        val bitmap = QRCode.from("ethereum:" + DataStore.accountAddress)
                 .withColor(ContextCompat.getColor(this, R.color.colorTextEmphasis), ContextCompat.getColor(this, R.color.contentBackground))
                 .withSize(size, size)
                 .bitmap()

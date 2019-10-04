@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ai.blockwell.qrdemo.WalletActivity">
+    <item
+        android:id="@+id/action_qr"
+        android:title="@string/display_wallet_qr" />
+    <item
+        android:id="@+id/action_etherscan_mainnet"
+        android:title="@string/view_on_etherscan_mainnet" />
+    <item
+        android:id="@+id/action_etherscan_rinkeby"
+        android:title="@string/view_on_etherscan_rinkeby" />
+</menu>

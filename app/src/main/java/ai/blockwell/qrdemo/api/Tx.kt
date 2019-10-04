@@ -59,6 +59,7 @@ data class TxResponse(
         val description: String?,
         val creator: String?,
         val confirmationLink: String?,
+        val confirmationMessage: String?,
         val steps: List<Step>,
         val dynamic: List<Dynamic>
 ) : Parcelable {

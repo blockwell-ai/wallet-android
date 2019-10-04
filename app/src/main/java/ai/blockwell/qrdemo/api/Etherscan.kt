@@ -8,6 +8,8 @@ object Etherscan {
 
     fun token(network: String?, address: String) = "${baseUrl(network)}/token/$address"
 
+    fun wallet(network: String?, address: String) = "${baseUrl(network)}/address/$address"
+
     fun baseUrl(network: String?) = when (network) {
         "main" -> ETHERSCAN_MAINNET
         "rinkeby" -> ETHERSCAN_RINKEBY

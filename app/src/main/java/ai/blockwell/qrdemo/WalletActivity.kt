@@ -6,14 +6,19 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import ai.blockwell.qrdemo.api.Auth
+import ai.blockwell.qrdemo.api.Etherscan
 import ai.blockwell.qrdemo.api.toDecimals
 import ai.blockwell.qrdemo.data.DataStore
 import ai.blockwell.qrdemo.qr.TransactionQrActivity
 import ai.blockwell.qrdemo.trainer.TrainerActivity
 import ai.blockwell.qrdemo.view.TransferAdapter
 import ai.blockwell.qrdemo.viewmodel.WalletModel
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.view.animation.DecelerateInterpolator
+import androidx.appcompat.widget.ListPopupWindow
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.doOnLayout
 import com.google.android.material.snackbar.Snackbar
 import com.takusemba.spotlight.OnSpotlightStateChangedListener
@@ -67,6 +72,36 @@ class WalletActivity : AppCompatActivity() {
             val clipData = ClipData.newPlainText("Account address", account_address.text)
             clipboardManager.primaryClip = clipData
             longToast(R.string.account_copied)
+        }
+        wallet_menu.setOnClickListener {
+            val popup = PopupMenu(this, wallet_menu)
+            popup.menuInflater.inflate(R.menu.menu_wallet_address, popup.menu)
+            popup.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.action_qr -> {
+                        startActivity<QrActivity>()
+                        true
+                    }
+                    R.id.action_etherscan_mainnet -> {
+                        val webpage = Uri.parse(Etherscan.wallet("main", DataStore.accountAddress))
+                        val intent = Intent(Intent.ACTION_VIEW, webpage)
+                        if (intent.resolveActivity(packageManager) != null) {
+                            startActivity(intent)
+                        }
+                        true
+                    }
+                    R.id.action_etherscan_rinkeby -> {
+                        val webpage = Uri.parse(Etherscan.wallet("rinkeby", DataStore.accountAddress))
+                        val intent = Intent(Intent.ACTION_VIEW, webpage)
+                        if (intent.resolveActivity(packageManager) != null) {
+                            startActivity(intent)
+                        }
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popup.show()
         }
 
         if (!DataStore.introShown) {

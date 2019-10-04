@@ -57,7 +57,7 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/account_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -67,6 +67,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/wallet_address_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -75,14 +76,32 @@
 
         <TextView
             android:id="@+id/account_address"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="10dp"
+            android:layout_below="@+id/wallet_address_label"
+            android:layout_toStartOf="@+id/wallet_menu"
+            android:layout_alignParentLeft="true"
             android:fontFamily="monospace"
             android:textColor="@color/colorTextEmphasis"
+            android:lines="1"
+            app:autoSizeMinTextSize="9sp"
+            app:autoSizeMaxTextSize="14sp"
+            app:autoSizeStepGranularity="1sp"
+            app:autoSizeTextType="uniform"
             tools:text="0x23fa157a1191094f7eaec704d03a7239828d263f" />
-    </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/wallet_menu"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/menu"
+            android:src="@drawable/ic_menu" />
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"

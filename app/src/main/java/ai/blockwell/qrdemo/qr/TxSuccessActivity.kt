@@ -2,6 +2,7 @@ package ai.blockwell.qrdemo.qr
 
 import ai.blockwell.qrdemo.R
 import ai.blockwell.qrdemo.api.*
+import ai.blockwell.qrdemo.qr.view.ConfirmationMessageView
 import ai.blockwell.qrdemo.qr.view.QrStepView
 import ai.blockwell.qrdemo.qr.view.SuggestionCreatedView
 import ai.blockwell.qrdemo.qr.view.WinningsView
@@ -9,14 +10,10 @@ import ai.blockwell.qrdemo.viewmodel.TxModel
 import ai.blockwell.qrdemo.viewmodel.VotingModel
 import android.Manifest
 import android.content.pm.PackageManager
-import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.os.PersistableBundle
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.style.StyleSpan
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -27,7 +24,6 @@ import kotlinx.coroutines.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.longToast
-import org.jetbrains.anko.textResource
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
 
@@ -140,10 +136,10 @@ class TxSuccessActivity : AppCompatActivity() {
             view
         }
 
-        loadStatuses()
+        loadStatuses(tx)
     }
 
-    private fun loadStatuses() {
+    private fun loadStatuses(code: TxResponse) {
         Timber.d { "Going in to load statuses" }
 
         job = scope.launch {
@@ -184,6 +180,11 @@ class TxSuccessActivity : AppCompatActivity() {
                                                             showSuggestion(tx, it)
                                                         }
                                             }
+
+                                    if (index == stepViews.size - 1 && code.confirmationMessage != null) {
+                                        showConfirmationMessage(code, tx, code.confirmationMessage)
+                                    }
+
                                     tx
                                 }
                                 tx.status == "error" -> {
@@ -242,6 +243,13 @@ class TxSuccessActivity : AppCompatActivity() {
                 })
             }
         }
+    }
+
+    private fun showConfirmationMessage(code: TxResponse, tx: TransactionStatusResponse, message: String) {
+        val view = ConfirmationMessageView(this)
+        view.update(code, tx, message)
+        extras.addView(view)
+        extras.visibility = View.VISIBLE
     }
 
     private fun filePermissions(event: LogEvent, qr: CreateQrResponse) {
