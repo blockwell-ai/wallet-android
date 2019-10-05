@@ -188,7 +188,7 @@ class TxSuccessActivity : AppCompatActivity() {
                                     tx
                                 }
                                 tx.status == "error" -> {
-                                    alert(getString(R.string.transaction_failed) + tx.error).show()
+                                    showError(tx, tx.error)
                                     tx
                                 }
                                 else -> null
@@ -212,6 +212,22 @@ class TxSuccessActivity : AppCompatActivity() {
                     longToast(R.string.unknown_error)
                 }
             }
+        }
+    }
+
+    private fun showError(tx: TransactionStatusResponse, error: TransactionError?) {
+        if (error != null) {
+            val gas = error.gasRequired
+            if (error.code == "gas" && gas != null) {
+                alert(error.message + " Send at least "
+                        + gas.toDecimals(18)
+                        + " ETH to your wallet and try again.")
+                        .show()
+            } else {
+                alert(error.message).show()
+            }
+        } else {
+            alert("Unknown error occurred. If this persists, contact us at blockwell@blockwell.ai.")
         }
     }
 

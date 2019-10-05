@@ -3,6 +3,7 @@ package ai.blockwell.qrdemo.utils
 import ai.blockwell.qrdemo.api.ArgumentValue
 import ai.blockwell.qrdemo.api.ArrayArgumentValue
 import ai.blockwell.qrdemo.api.StringArgumentValue
+import ai.blockwell.qrdemo.api.TransactionError
 import com.google.gson.*
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
@@ -58,6 +59,62 @@ class ArgumentValueTypeAdapter : TypeAdapter<ArgumentValue>() {
 
         if (token == JsonToken.STRING) {
             return StringArgumentValue(reader.nextString())
+        }
+
+        return null
+    }
+}
+
+class TransactionErrorTypeAdapter : TypeAdapter<TransactionError>() {
+    override fun write(out: JsonWriter, value: TransactionError?) {
+        if (value != null) {
+            out.beginObject()
+            out.name("code")
+            out.value(value.code)
+            out.name("message")
+            out.value(value.message)
+
+            if (value.gasRequired != null) {
+                out.name("gasRequired")
+                out.value(value.gasRequired)
+            }
+            out.endObject()
+        } else {
+            out.nullValue()
+        }
+    }
+
+    override fun read(reader: JsonReader): TransactionError? {
+        val token = reader.peek()
+
+        if (token == JsonToken.BEGIN_OBJECT) {
+            reader.beginObject()
+            var code: String? = null
+            var message: String? = null
+            var gasRequired: String? = null
+
+            while (reader.hasNext()) {
+                when (reader.nextName()) {
+                    "code" ->  {
+                         code = reader.nextString()
+                    }
+                    "message" -> {
+                        message = reader.nextString()
+                    }
+                    "gasRequired" -> {
+                        gasRequired = reader.nextString()
+                    }
+                }
+            }
+            reader.endObject()
+
+            if (code != null && message != null) {
+                return TransactionError(code, message, gasRequired)
+            }
+        }
+
+        if (token == JsonToken.STRING) {
+            return TransactionError("old_error", reader.nextString())
         }
 
         return null

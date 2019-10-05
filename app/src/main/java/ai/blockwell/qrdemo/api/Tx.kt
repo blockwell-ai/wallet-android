@@ -3,6 +3,7 @@ package ai.blockwell.qrdemo.api
 import ai.blockwell.qrdemo.data.DataStore
 import ai.blockwell.qrdemo.trainer.suggestions.Suggestion
 import ai.blockwell.qrdemo.utils.ArgumentValueTypeAdapter
+import ai.blockwell.qrdemo.utils.TransactionErrorTypeAdapter
 import android.os.Parcelable
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.google.gson.GsonBuilder
@@ -14,6 +15,7 @@ import kotlinx.coroutines.withContext
 
 val gson = GsonBuilder().let {
     it.registerTypeAdapter(ArgumentValue::class.java, ArgumentValueTypeAdapter())
+    it.registerTypeAdapter(TransactionError::class.java, TransactionErrorTypeAdapter())
 
     it.create()
 }

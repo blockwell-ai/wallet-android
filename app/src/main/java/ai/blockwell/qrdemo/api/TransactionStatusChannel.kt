@@ -96,7 +96,7 @@ data class TransactionStatusResponse(
         val status: String,
         val from: String,
         val contractId: String?,
-        val error: String?,
+        val error: TransactionError?,
         val transactionHash: String?,
         val network: String?,
         val events: List<LogEvent?>?
@@ -111,4 +111,11 @@ data class LogEvent(
         val event: String,
         val address: String,
         val returnValues: Map<String, String>
+) : Parcelable
+
+@Parcelize
+data class TransactionError(
+        val code: String,
+        val message: String,
+        val gasRequired: String? = null
 ) : Parcelable

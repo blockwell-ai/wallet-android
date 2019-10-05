@@ -2,6 +2,7 @@ package ai.blockwell.qrdemo
 
 import ai.blockwell.qrdemo.api.*
 import ai.blockwell.qrdemo.utils.ArgumentValueTypeAdapter
+import ai.blockwell.qrdemo.utils.TransactionErrorTypeAdapter
 import ai.blockwell.qrdemo.utils.argumentValueDeserializer
 import ai.blockwell.qrdemo.utils.argumentValueSerializer
 import ai.blockwell.qrdemo.viewmodel.*
@@ -17,6 +18,7 @@ val mainModule = applicationContext {
     bean {
         val builder = GsonBuilder()
         builder.registerTypeAdapter(ArgumentValue::class.java, ArgumentValueTypeAdapter())
+        builder.registerTypeAdapter(TransactionError::class.java, TransactionErrorTypeAdapter())
 
         builder.create()
     }
