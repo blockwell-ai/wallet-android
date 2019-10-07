@@ -1,6 +1,7 @@
 package ai.blockwell.qrdemo
 
 import android.app.Application
+import android.os.Build
 import com.chibatching.kotpref.Kotpref
 import com.chibatching.kotpref.gsonpref.gson
 import com.facebook.stetho.Stetho
@@ -24,7 +25,10 @@ class WalletApplication : Application() {
         FuelManager.instance.basePath = BuildConfig.API_BASEURL
         FuelManager.instance.baseHeaders = mapOf(
                 "Content-Type" to "application/json",
-                "Accept" to "application/json"
+                "Accept" to "application/json",
+                "User-Agent" to "Blockwell-QR bwqrandroid ${BuildConfig.APPLICATION_ID} ${BuildConfig.VERSION_NAME} " +
+                        "(${Build.MANUFACTURER} ${Build.MODEL}) " +
+                        "(Android SDK ${Build.VERSION.SDK_INT})"
         )
         FuelManager.instance.hook = StethoHook()
 
