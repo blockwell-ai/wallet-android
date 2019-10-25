@@ -1,5 +1,6 @@
 package ai.blockwell.qrdemo.qr
 
+import ai.blockwell.qrdemo.BaseActivity
 import ai.blockwell.qrdemo.R
 import ai.blockwell.qrdemo.api.*
 import ai.blockwell.qrdemo.qr.view.ConfirmationMessageView
@@ -15,7 +16,6 @@ import android.os.Bundle
 import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.os.PersistableBundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.ajalt.timberkt.Timber
@@ -31,8 +31,7 @@ import org.koin.android.ext.android.inject
 /**
  * Shows a QR code of the user's Ethereum address.
  */
-class TxSuccessActivity : AppCompatActivity() {
-    val scope = MainScope()
+class TxSuccessActivity : BaseActivity() {
     val model by viewModel<TxModel>()
     val votingModel by viewModel<VotingModel>()
     val client by inject<ApiClient>()

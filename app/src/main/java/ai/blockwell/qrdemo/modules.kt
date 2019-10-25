@@ -27,6 +27,8 @@ val mainModule = applicationContext {
     bean { Tx(get()) }
     bean { Tokens(get()) }
     bean { Proxy(get()) }
+    bean { SystemStatus(get()) }
+
     viewModel { WalletModel(get()) }
     viewModel { SendModel(get()) }
     viewModel { TxModel(get()) }

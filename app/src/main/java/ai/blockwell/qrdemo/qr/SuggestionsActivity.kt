@@ -1,5 +1,6 @@
 package ai.blockwell.qrdemo.qr
 
+import ai.blockwell.qrdemo.BaseActivity
 import ai.blockwell.qrdemo.R
 import ai.blockwell.qrdemo.viewmodel.VotingModel
 import android.app.Activity
@@ -12,12 +13,11 @@ import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
 import org.koin.android.architecture.ext.viewModel
 
-class SuggestionsActivity : AppCompatActivity() {
+class SuggestionsActivity : BaseActivity() {
     companion object {
         const val REQUEST = 1001
     }
 
-    val scope = MainScope()
     val votingModel by viewModel<VotingModel>()
     var name = ""
     var contractId = ""
@@ -61,7 +61,12 @@ class SuggestionsActivity : AppCompatActivity() {
             result.fold({
                 suggestions_list.setSuggestions(it)
             }, {
-                val dialog = alert(getString(R.string.unknown_error) + " - " + it.message)
+                val message = if (systemStatus.error.isNotEmpty()) {
+                    systemStatus.error
+                } else {
+                    getString(R.string.unknown_error) + " - " + it.message
+                }
+                val dialog = alert(message)
                 dialog.onCancelled { finish() }
                 dialog.show()
             })

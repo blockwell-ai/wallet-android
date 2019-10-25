@@ -16,10 +16,9 @@ import org.koin.android.ext.android.inject
 /**
  * A login screen that offers login via email/password.
  */
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BaseActivity() {
 
     val auth: Auth by inject()
-    val scope = MainScope()
 
     var deepLink: String? = null
 

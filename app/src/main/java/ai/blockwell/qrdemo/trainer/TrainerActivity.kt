@@ -1,5 +1,6 @@
 package ai.blockwell.qrdemo.trainer
 
+import ai.blockwell.qrdemo.BaseActivity
 import ai.blockwell.qrdemo.R
 import ai.blockwell.qrdemo.data.DataStore
 import ai.blockwell.qrdemo.generated.base.GeneratedActivity
@@ -8,21 +9,18 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_trainer.*
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
 import org.koin.android.architecture.ext.viewModel
 
-class TrainerActivity : AppCompatActivity(), TrainerFragment.OnOptionSelectedListener {
+class TrainerActivity : BaseActivity(), TrainerFragment.OnOptionSelectedListener {
 
-    val scope = MainScope()
     val model by viewModel<TrainerModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {

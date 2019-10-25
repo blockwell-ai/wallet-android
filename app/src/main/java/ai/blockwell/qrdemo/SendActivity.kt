@@ -24,9 +24,8 @@ import java.math.BigDecimal
 /**
  * Sending tokens to another user or an Ethereum address.
  */
-class SendActivity : AppCompatActivity() {
+class SendActivity : BaseActivity() {
 
-    val scope = MainScope()
     val model by viewModel<SendModel>()
     var channel: ReceiveChannel<Result<TransferResponse, Exception>>? = null
 

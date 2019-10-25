@@ -1,10 +1,5 @@
 package ai.blockwell.qrdemo
 
-import android.content.ClipData
-import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import ai.blockwell.qrdemo.api.Auth
 import ai.blockwell.qrdemo.api.Etherscan
 import ai.blockwell.qrdemo.api.toDecimals
@@ -13,11 +8,14 @@ import ai.blockwell.qrdemo.qr.TransactionQrActivity
 import ai.blockwell.qrdemo.trainer.TrainerActivity
 import ai.blockwell.qrdemo.view.TransferAdapter
 import ai.blockwell.qrdemo.viewmodel.WalletModel
+import android.content.ClipData
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.animation.DecelerateInterpolator
-import androidx.appcompat.widget.ListPopupWindow
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.doOnLayout
 import com.google.android.material.snackbar.Snackbar
@@ -27,7 +25,6 @@ import com.takusemba.spotlight.shape.Circle
 import com.takusemba.spotlight.target.SimpleTarget
 import kotlinx.android.synthetic.main.activity_wallet.*
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.*
@@ -37,10 +34,9 @@ import org.koin.android.ext.android.inject
 /**
  * The main wallet activity.
  */
-class WalletActivity : AppCompatActivity() {
+class WalletActivity : BaseActivity() {
 
     val auth: Auth by inject()
-    val scope = MainScope()
     val model by viewModel<WalletModel>()
 
     // The parent job for all background work this activity subscribes to
@@ -199,7 +195,7 @@ class WalletActivity : AppCompatActivity() {
     fun setBalance(newBalance: String): Boolean {
         val oldText = balance.text
         balance.text = newBalance.toDecimals(DataStore.tokenDecimals)
-        return oldText.isNotEmpty() && oldText != balance.text
+        return oldText.isNotEmpty() && oldText.toString() != balance.text.toString()
     }
 
     /**

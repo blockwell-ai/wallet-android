@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (DataStore.tokenName.isEmpty()) {
+        if (DataStore.tokenName.isEmpty() || DataStore.tokenId.isEmpty() || DataStore.tokenId != BuildConfig.TOKEN_ID) {
             scope.launch {
                 tokens.get()
                 redirect()

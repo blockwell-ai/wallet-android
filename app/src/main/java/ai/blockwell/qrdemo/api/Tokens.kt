@@ -20,6 +20,7 @@ class Tokens(val client: ApiClient) {
         val response = client.get("api/tokens/${BuildConfig.TOKEN_ID}/properties", TokensResponse.Deserializer)
 
         response.success { result ->
+            DataStore.tokenId = BuildConfig.TOKEN_ID
             DataStore.tokenName = result.name
             DataStore.tokenSymbol = result.symbol
             DataStore.tokenDecimals =  result.decimals.toInt()

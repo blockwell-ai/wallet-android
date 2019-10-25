@@ -1,23 +1,23 @@
 package ai.blockwell.qrdemo.qr
 
 import ai.blockwell.qrdemo.*
-import ai.blockwell.qrdemo.api.*
-import ai.blockwell.qrdemo.qr.view.*
+import ai.blockwell.qrdemo.api.ArgumentValue
+import ai.blockwell.qrdemo.api.Auth
+import ai.blockwell.qrdemo.api.Dynamic
+import ai.blockwell.qrdemo.api.TxResponse
+import ai.blockwell.qrdemo.qr.view.DynamicView
+import ai.blockwell.qrdemo.qr.view.InputArgumentView
+import ai.blockwell.qrdemo.qr.view.InputSuggestionView
+import ai.blockwell.qrdemo.qr.view.QrStepView
 import ai.blockwell.qrdemo.trainer.suggestions.Suggestion
 import ai.blockwell.qrdemo.viewmodel.TxModel
 import ai.blockwell.qrdemo.viewmodel.VotingModel
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.style.StyleSpan
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_tx.*
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.*
 import org.koin.android.architecture.ext.viewModel
@@ -26,8 +26,7 @@ import org.koin.android.ext.android.inject
 /**
  * Shows a QR code of the user's Ethereum address.
  */
-class TxActivity : AppCompatActivity() {
-    val scope = MainScope()
+class TxActivity : BaseActivity() {
     val model by viewModel<TxModel>()
     val votingModel by viewModel<VotingModel>()
     val auth: Auth by inject()
@@ -113,10 +112,10 @@ class TxActivity : AppCompatActivity() {
                 render(it)
             }, {
                 val message = it.message
-                if (message != null) {
-                    alert(message).show()
-                } else {
-                    alert(R.string.unknown_error).show()
+                when {
+                    systemStatus.error.isNotEmpty() -> alert(systemStatus.error).show()
+                    message != null -> alert(message).show()
+                    else -> alert(R.string.unknown_error).show()
                 }
             })
         }
@@ -220,7 +219,13 @@ class TxActivity : AppCompatActivity() {
                     cancel.isEnabled = true
                     accept.setText(R.string.accept)
                     progress.visibility = View.GONE
-                    longToast(R.string.submit_failed)
+
+                    val message = if (systemStatus.error.isNotEmpty()) {
+                        systemStatus.error
+                    } else {
+                        getString(R.string.submit_failed)
+                    }
+                    alert(message).show()
                 })
             }
         }

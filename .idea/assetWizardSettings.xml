@@ -23,7 +23,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/home/orblog/.local/share/JetBrains/Toolbox/apps/AndroidStudio/ch-0/191.5900203/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_more_vert_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/home/orblog/.local/share/JetBrains/Toolbox/apps/AndroidStudio/ch-0/191.5900203/plugins/android/lib/android.jar!/images/material_design_icons/alert/ic_warning_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -33,7 +33,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_menu" />
+                            <entry key="outputName" value="ic_warning" />
                             <entry key="sourceFile" value="$USER_HOME$" />
                           </map>
                         </option>

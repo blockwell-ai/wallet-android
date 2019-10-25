@@ -23,6 +23,7 @@ object DataStore : KotprefModel() {
     var override = false
 
     // Details on the token
+    var tokenId by stringPref("")
     var tokenName by stringPref("")
     var tokenSymbol by stringPref("")
     var tokenDecimals by intPref(18)

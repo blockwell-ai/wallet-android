@@ -17,10 +17,9 @@ import org.koin.android.ext.android.inject
 /**
  * A simple registration screen with email and password fields.
  */
-class RegisterActivity : AppCompatActivity() {
+class RegisterActivity : BaseActivity() {
 
     val auth: Auth by inject()
-    val scope = MainScope()
 
     var deepLink: String? = null
 
