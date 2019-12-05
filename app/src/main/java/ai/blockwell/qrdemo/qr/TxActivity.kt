@@ -1,10 +1,7 @@
 package ai.blockwell.qrdemo.qr
 
 import ai.blockwell.qrdemo.*
-import ai.blockwell.qrdemo.api.ArgumentValue
-import ai.blockwell.qrdemo.api.Auth
-import ai.blockwell.qrdemo.api.Dynamic
-import ai.blockwell.qrdemo.api.TxResponse
+import ai.blockwell.qrdemo.api.*
 import ai.blockwell.qrdemo.qr.view.DynamicView
 import ai.blockwell.qrdemo.qr.view.InputArgumentView
 import ai.blockwell.qrdemo.qr.view.InputSuggestionView
@@ -79,7 +76,7 @@ class TxActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            SuggestionsActivity.REQUEST -> if (resultCode == Activity.RESULT_OK && data != null) {
+            QrSuggestionsActivity.REQUEST -> if (resultCode == Activity.RESULT_OK && data != null) {
                 val name = data.getStringExtra("name")
                 val dynamicView = dynamicViews.find { it.dynamic.name == name }
                 val suggestion = data.getParcelableExtra<Suggestion>("suggestion")
@@ -153,6 +150,13 @@ class TxActivity : BaseActivity() {
             val view: DynamicView = if (it.type == "suggestion") {
                 val view = InputSuggestionView(this, it, tx, votingModel)
                 view.setOnClickListener { _ -> votingClick(it) }
+
+                val sugg = intent.getParcelableExtra<Suggestion>("suggestion")
+
+                if (sugg != null) {
+                    view.setSuggestion(sugg)
+                    updatePreview(it, SuggestionArgumentValue(sugg))
+                }
                 view
             } else {
                 val view = InputArgumentView(this, it)
@@ -183,7 +187,7 @@ class TxActivity : BaseActivity() {
     }
 
     private fun votingClick(dynamic: Dynamic) {
-        startActivityForResult<SuggestionsActivity>(SuggestionsActivity.REQUEST,
+        startActivityForResult<QrSuggestionsActivity>(QrSuggestionsActivity.REQUEST,
                 "name" to dynamic.name,
                 "contractId" to dynamic.contractId
         )

@@ -7,7 +7,6 @@ import ai.blockwell.qrdemo.utils.TransactionErrorTypeAdapter
 import android.os.Parcelable
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonElement
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 import kotlinx.coroutines.Dispatchers
@@ -50,6 +49,18 @@ class Tx(val client: ApiClient) {
 
     suspend fun create(request: CreateQrRequest) = withContext(Dispatchers.Default) {
         client.postWithAuth("api/qr/code", DataStore.accessToken, CreateQrResponse.Deserializer, request)
+    }
+
+    suspend fun createSuggestionCode(contractId: String) = withContext(Dispatchers.Default) {
+        client.getWithAuth("api/qr/suggestions/create/$contractId", DataStore.accessToken, TxResponse.Deserializer)
+    }
+
+    suspend fun voteCode(contractId: String) = withContext(Dispatchers.Default) {
+        client.getWithAuth("api/qr/suggestions/vote/$contractId", DataStore.accessToken, TxResponse.Deserializer)
+    }
+
+    suspend fun findContractId(address: String) = withContext(Dispatchers.Default) {
+        client.getWithAuth("api/qr/contract/${address}", DataStore.accessToken, ContractResponse.Deserializer)
     }
 }
 
@@ -149,5 +160,15 @@ data class CreateQrResponse(
 ) : Parcelable {
     object Deserializer : ResponseDeserializable<CreateQrResponse> {
         override fun deserialize(content: String) = gson.fromJson(content, CreateQrResponse::class.java)
+    }
+}
+
+@Parcelize
+data class ContractResponse(
+        val id: String,
+        val address: String?
+) : Parcelable {
+    object Deserializer : ResponseDeserializable<ContractResponse> {
+        override fun deserialize(content: String) = gson.fromJson(content, ContractResponse::class.java)
     }
 }

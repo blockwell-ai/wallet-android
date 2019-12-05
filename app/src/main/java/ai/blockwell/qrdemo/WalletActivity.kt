@@ -5,6 +5,7 @@ import ai.blockwell.qrdemo.api.Etherscan
 import ai.blockwell.qrdemo.api.toDecimals
 import ai.blockwell.qrdemo.data.DataStore
 import ai.blockwell.qrdemo.qr.TransactionQrActivity
+import ai.blockwell.qrdemo.suggestions.SuggestionsActivity
 import ai.blockwell.qrdemo.trainer.TrainerActivity
 import ai.blockwell.qrdemo.view.TransferAdapter
 import ai.blockwell.qrdemo.viewmodel.WalletModel
@@ -152,6 +153,10 @@ class WalletActivity : BaseActivity() {
             }
             R.id.action_trainer -> {
                 startActivity<TrainerActivity>()
+                true
+            }
+            R.id.action_suggestions -> {
+                startActivity<SuggestionsActivity>()
                 true
             }
             R.id.action_licenses -> {

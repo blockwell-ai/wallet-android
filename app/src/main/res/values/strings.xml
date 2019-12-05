@@ -116,4 +116,8 @@
     <string name="display_wallet_qr">Display Wallet QR</string>
     <string name="view_on_etherscan_mainnet">View On Etherscan (Mainnet)</string>
     <string name="view_on_etherscan_rinkeby">View On Etherscan (Rinkeby)</string>
+    <string name="change_contract">Change Contract</string>
+    <string name="suggestions_viewer">Suggestions Viewer</string>
+    <string name="contract_address">Contract Address</string>
+    <string name="invalid_address">That is not a valid Ethereum address, please try again.</string>
 </resources>

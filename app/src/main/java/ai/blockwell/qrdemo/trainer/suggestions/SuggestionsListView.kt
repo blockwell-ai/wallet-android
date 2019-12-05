@@ -95,6 +95,8 @@ class SuggestionsListView : FrameLayout {
             if (suggestion.tag.isNotEmpty()) {
                 view.tagView.text = suggestion.tag
                 view.tagView.visibility = View.VISIBLE
+            } else {
+                view.tagView.visibility = View.GONE
             }
         }
     }

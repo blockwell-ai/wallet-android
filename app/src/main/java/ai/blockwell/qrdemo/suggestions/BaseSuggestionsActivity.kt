@@ -1,22 +1,18 @@
-package ai.blockwell.qrdemo.qr
+package ai.blockwell.qrdemo.suggestions
 
 import ai.blockwell.qrdemo.BaseActivity
 import ai.blockwell.qrdemo.R
+import ai.blockwell.qrdemo.trainer.suggestions.Suggestion
 import ai.blockwell.qrdemo.viewmodel.VotingModel
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_suggestions.*
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
 import org.koin.android.architecture.ext.viewModel
 
-class SuggestionsActivity : BaseActivity() {
-    companion object {
-        const val REQUEST = 1001
-    }
+abstract class BaseSuggestionsActivity : BaseActivity() {
 
     val votingModel by viewModel<VotingModel>()
     var name = ""
@@ -29,24 +25,9 @@ class SuggestionsActivity : BaseActivity() {
         title = "Suggestions"
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setSubtitle(R.string.select_suggestion)
 
-        name = intent.getStringExtra("name") ?: ""
-        contractId = intent.getStringExtra("contractId") ?: ""
-
-        if (name.isEmpty() || contractId.isEmpty()) {
-            val dialog = alert(R.string.unknown_error)
-            dialog.onCancelled { finish() }
-            dialog.show()
-        } else {
-            load()
-            suggestions_list.setClickListener {
-                val result = Intent("ai.blockwell.qrdemo.SUGGESTION_RESULT")
-                result.putExtra("name", name)
-                result.putExtra("suggestion", it)
-                setResult(Activity.RESULT_OK, result)
-                finish()
-            }
+        suggestions_list.setClickListener {
+            suggestionClick(it)
         }
     }
 
@@ -55,7 +36,11 @@ class SuggestionsActivity : BaseActivity() {
         return true
     }
 
-    private fun load() {
+    protected open fun suggestionClick(suggestion: Suggestion) {
+
+    }
+
+    protected fun load() {
         scope.launch {
             val result = votingModel.getSuggestions(contractId).await()
             result.fold({

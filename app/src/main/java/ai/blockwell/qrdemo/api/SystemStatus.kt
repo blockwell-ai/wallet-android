@@ -41,8 +41,8 @@ class SystemStatus(val client: ApiClient) : CoroutineScope {
                     result.success {
                         val oldStatus = status
                         status = it.status
-                        message = it.message
-                        error = it.error
+                        message = it.message ?: ""
+                        error = it.error ?: ""
 
                         if (oldStatus != status) {
                             notifySubscribers()
@@ -71,8 +71,8 @@ class SystemStatus(val client: ApiClient) : CoroutineScope {
 
 data class StatusResponse(
         val status: String = "",
-        val message: String = "",
-        val error: String = ""
+        val message: String? = "",
+        val error: String? = ""
 ) {
     object Deserializer : ResponseDeserializable<StatusResponse> {
         override fun deserialize(content: String) = Gson().fromJson(content, StatusResponse::class.java)

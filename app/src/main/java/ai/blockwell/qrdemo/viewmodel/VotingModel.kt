@@ -3,6 +3,8 @@ package ai.blockwell.qrdemo.viewmodel
 import ai.blockwell.qrdemo.api.ApiClient
 import ai.blockwell.qrdemo.api.CreateQrResponse
 import ai.blockwell.qrdemo.api.Proxy
+import ai.blockwell.qrdemo.api.Tx
+import ai.blockwell.qrdemo.data.DataStore
 import ai.blockwell.qrdemo.trainer.suggestions.Suggestion
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +13,8 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 
 class VotingModel(val client: ApiClient, val proxy: Proxy) : ViewModel() {
+    private val tx = Tx(client)
+
     fun getSuggestion(contractId: String, suggestionId: Int) = viewModelScope.async {
         val textAsync = async { proxy.contractCall(contractId, "getSuggestionText", listOf(suggestionId.toString())) }
         val votesAsync = async { proxy.contractCall(contractId, "getVotes", listOf(suggestionId.toString())) }
@@ -42,6 +46,19 @@ class VotingModel(val client: ApiClient, val proxy: Proxy) : ViewModel() {
             Result.error(e)
         }
     }
+
+    fun getContractName(contractId: String) = viewModelScope.async {
+        // Proxy through to API Miner
+        proxy.contractCall(contractId, "name")
+    }
+
+    suspend fun getContractId(address: String) = tx.findContractId(address)
+
+    suspend fun getCreateSuggestionCode(contractId: String) =
+            tx.createSuggestionCode(contractId)
+
+    suspend fun getVoteCode(contractId: String) =
+            tx.voteCode(contractId)
 
     /**
      * Gets all suggestion texts using the new method if possible, falls back to old method.

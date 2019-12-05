@@ -18,6 +18,11 @@
         android:icon="@android:drawable/ic_menu_help"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_suggestions"
+        android:title="@string/suggestions_viewer"
+        android:icon="@android:drawable/ic_menu_help"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_licenses"
         android:title="@string/open_source_licenses"
         android:icon="@android:drawable/ic_menu_help"

@@ -27,4 +27,6 @@ object DataStore : KotprefModel() {
     var tokenName by stringPref("")
     var tokenSymbol by stringPref("")
     var tokenDecimals by intPref(18)
+
+    var suggestionsToken by stringPref("")
 }
