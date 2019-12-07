@@ -15,8 +15,14 @@ import timber.log.Timber.DebugTree
 
 @Suppress("unused")
 class WalletApplication : Application() {
+    companion object {
+        lateinit var app: Application
+    }
+
     override fun onCreate() {
         super.onCreate()
+
+        app = this
 
         Stetho.initializeWithDefaults(this)
         Kotpref.init(this)

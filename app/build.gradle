@@ -4,6 +4,7 @@ config.load(new FileInputStream(new File("${projectDir}/config.properties")))
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlinx-serialization'
 
 config.keys().each {
     if (project.hasProperty(it)) {
@@ -121,6 +122,8 @@ dependencies {
     implementation 'io.coil-kt:coil:0.6.1'
     implementation 'com.github.ajalt:timberkt:1.5.1'
     implementation 'com.samskivert:jmustache:1.15'
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0"
+    implementation 'com.charleskorn.kaml:kaml:0.15.0'
 
     def fuelVersion = '2.1.0'
     implementation "com.github.kittinunf.fuel:fuel:$fuelVersion"

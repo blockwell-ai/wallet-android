@@ -24,6 +24,8 @@ class TxModel(val client: ApiClient) : ViewModel() {
         tx.get(url.path!!, url.query ?: "")
     }
 
+    suspend fun getCodes(codes: List<String>) = tx.getCodes(codes)
+
     suspend fun submitCode(url: Uri, values: Map<String, ArgumentValue> = mapOf()) = viewModelScope.async {
         tx.submit(url.path!!, url.query ?: "", values)
     }

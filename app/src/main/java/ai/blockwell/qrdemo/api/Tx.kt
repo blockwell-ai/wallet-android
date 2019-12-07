@@ -62,6 +62,11 @@ class Tx(val client: ApiClient) {
     suspend fun findContractId(address: String) = withContext(Dispatchers.Default) {
         client.getWithAuth("api/qr/contract/${address}", DataStore.accessToken, ContractResponse.Deserializer)
     }
+
+    suspend fun getCodes(shortcodes: List<String>) = withContext(Dispatchers.Default) {
+        val codes = shortcodes.joinToString(",")
+        client.getWithAuth("api/qr/codes?shortcodes=$codes", DataStore.accessToken, CodesResponse.Deserializer)
+    }
 }
 
 @Parcelize
@@ -170,5 +175,13 @@ data class ContractResponse(
 ) : Parcelable {
     object Deserializer : ResponseDeserializable<ContractResponse> {
         override fun deserialize(content: String) = gson.fromJson(content, ContractResponse::class.java)
+    }
+}
+
+data class CodesResponse(
+        val data: List<TxResponse>
+) {
+    object Deserializer : ResponseDeserializable<CodesResponse> {
+        override fun deserialize(content: String) = gson.fromJson(content, CodesResponse::class.java)
     }
 }

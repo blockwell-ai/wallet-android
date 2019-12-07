@@ -1,0 +1,15 @@
+screens:
+  - title: Kanacoin Basics
+    description: Codes for basic ERC20 interactions for Kanacoin.
+    shortcodes:
+      - vnkmhq
+      - byndlr
+      - 90rqfm
+
+  - title: Kanacoin Suggestions
+    description: Suggestions and voting.
+    shortcodes:
+      - dc0emk
+      - xtptxy
+
+displayFab: false

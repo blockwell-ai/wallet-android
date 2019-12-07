@@ -4,6 +4,8 @@ import ai.blockwell.qrdemo.api.Auth
 import ai.blockwell.qrdemo.api.Etherscan
 import ai.blockwell.qrdemo.api.toDecimals
 import ai.blockwell.qrdemo.data.DataStore
+import ai.blockwell.qrdemo.data.ShortcutConfig
+import ai.blockwell.qrdemo.qr.ShortcutScreensActivity
 import ai.blockwell.qrdemo.qr.TransactionQrActivity
 import ai.blockwell.qrdemo.suggestions.SuggestionsActivity
 import ai.blockwell.qrdemo.trainer.TrainerActivity
@@ -65,6 +67,14 @@ class WalletActivity : BaseActivity() {
         fab.setOnClickListener {
             startActivity<TransactionQrActivity>()
         }
+
+        if (ShortcutConfig.config.displayFab) {
+            shortcuts_fab.show()
+            shortcuts_fab.setOnClickListener {
+                startActivity<ShortcutScreensActivity>()
+            }
+        }
+
         account_address.setOnClickListener {
             val clipData = ClipData.newPlainText("Account address", account_address.text)
             clipboardManager.primaryClip = clipData

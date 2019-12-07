@@ -84,6 +84,8 @@
             android:parentActivityName=".WalletActivity" />
         <activity android:name=".suggestions.SuggestionsActivity" />
         <activity android:name=".qr.QrSuggestionsActivity" />
+        <activity android:name=".qr.ShortcutScreensActivity" />
+        <activity android:name=".qr.ShortcutsActivity" />
         <activity
             android:name=".LicensesActivity"
             android:label="@string/open_source_licenses" />
