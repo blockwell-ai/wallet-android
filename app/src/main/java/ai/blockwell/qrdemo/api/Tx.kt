@@ -134,6 +134,11 @@ data class StringArgumentValue(private val value: String) : ArgumentValue(), Par
 }
 
 @Parcelize
+data class BooleanArgumentValue(private val value: String) : ArgumentValue(), Parcelable {
+    override fun getValue() = value
+}
+
+@Parcelize
 data class ArrayArgumentValue(private val values: List<String>) : ArgumentValue(), Parcelable {
     override fun isArray() = true
 

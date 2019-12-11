@@ -1,13 +1,11 @@
 package ai.blockwell.qrdemo.utils
 
-import ai.blockwell.qrdemo.api.ArgumentValue
-import ai.blockwell.qrdemo.api.ArrayArgumentValue
-import ai.blockwell.qrdemo.api.StringArgumentValue
-import ai.blockwell.qrdemo.api.TransactionError
+import ai.blockwell.qrdemo.api.*
 import com.google.gson.*
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
+import java.util.*
 
 val argumentValueDeserializer = JsonDeserializer<ArgumentValue> { json, _, _ ->
     when {
@@ -32,12 +30,14 @@ val argumentValueSerializer = JsonSerializer<ArgumentValue> { src, _, _ ->
 class ArgumentValueTypeAdapter : TypeAdapter<ArgumentValue>() {
     override fun write(out: JsonWriter, value: ArgumentValue?) {
         if (value != null) {
-            if (value.isArray()) {
-                out.beginArray()
-                value.getArray().forEach { out.value(it) }
-                out.endArray()
-            } else {
-                out.value(value.getValue())
+            when {
+                value.isArray() -> {
+                    out.beginArray()
+                    value.getArray().forEach { out.value(it) }
+                    out.endArray()
+                }
+                value is BooleanArgumentValue -> out.value(!(value.getValue().isEmpty() || value.getValue().toLowerCase(Locale.ENGLISH) == "false"))
+                else -> out.value(value.getValue())
             }
         } else {
             out.nullValue()
@@ -59,6 +59,10 @@ class ArgumentValueTypeAdapter : TypeAdapter<ArgumentValue>() {
 
         if (token == JsonToken.STRING) {
             return StringArgumentValue(reader.nextString())
+        }
+
+        if (token == JsonToken.BOOLEAN) {
+            return StringArgumentValue(if (reader.nextBoolean()) "true" else "false")
         }
 
         return null

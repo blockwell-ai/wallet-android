@@ -1,10 +1,7 @@
 package ai.blockwell.qrdemo.qr.view
 
 import ai.blockwell.qrdemo.R
-import ai.blockwell.qrdemo.api.ArgumentValue
-import ai.blockwell.qrdemo.api.ArrayArgumentValue
-import ai.blockwell.qrdemo.api.Dynamic
-import ai.blockwell.qrdemo.api.StringArgumentValue
+import ai.blockwell.qrdemo.api.*
 import ai.blockwell.qrdemo.utils.isValidAddress
 import android.annotation.SuppressLint
 import android.content.Context
@@ -24,11 +21,13 @@ class InputArgumentView(context: Context, override val dynamic: Dynamic, val sym
 
     override val value: ArgumentValue
         get() {
-            return if (dynamic.type == "array") {
-                val list = input.text.toString().lines()
-                ArrayArgumentValue(list.dropLastWhile { it.isEmpty() })
-            } else {
-                StringArgumentValue(input.text.toString())
+            return when {
+                dynamic.type == "array" -> {
+                    val list = input.text.toString().lines()
+                    ArrayArgumentValue(list.dropLastWhile { it.isEmpty() })
+                }
+                dynamic.type == "bool" -> BooleanArgumentValue(input.text.toString())
+                else -> StringArgumentValue(input.text.toString())
             }
         }
 
