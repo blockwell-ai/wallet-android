@@ -47,7 +47,7 @@ class TransferTokensChannel(val client: ApiClient) : CoroutineScope {
         }
 
         job = launch {
-            val response = client.postWithAuth("api/tokens/${BuildConfig.TOKEN_ID}/transfers",
+            val response = client.postWithAuth("api/tokens/${DataStore.tokenId}/transfers",
                     DataStore.accessToken,
                     TransferResponse.Deserializer,
                     TransferRequest(to, value))

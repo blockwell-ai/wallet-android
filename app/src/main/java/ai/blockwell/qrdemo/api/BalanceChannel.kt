@@ -64,7 +64,7 @@ class BalanceChannel(val client: ApiClient) : CoroutineScope {
      * Refreshes the user's wallet balance.
      */
     suspend fun refreshBalance() {
-        val response = client.getWithAuth("api/tokens/${BuildConfig.TOKEN_ID}/balance",
+        val response = client.getWithAuth("api/tokens/${DataStore.tokenId}/balance",
                 DataStore.accessToken,
                 BalanceResponse.Deserializer)
 

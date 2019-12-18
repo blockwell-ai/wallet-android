@@ -31,49 +31,20 @@ class TxModel(val client: ApiClient) : ViewModel() {
     }
 
     suspend fun createVoteQr(contractId: String, suggestionId: Int): Result<CreateQrResponse, Exception> {
-        return tx.create(CreateQrRequest(
-                "Vote",
-                listOf(
-                        Step(contractId, "vote", listOf(
-                                Argument(
-                                        "Suggestion",
-                                        "suggestionId",
-                                        "suggestion",
-                                        value = StringArgumentValue(suggestionId.toString())
-                                ),
-                                Argument(
-                                        "Comment",
-                                        "comment",
-                                        "string",
-                                        source = Source(
-                                                "dynamic",
-                                                "comment"
-                                        )
-                                )
-                        ), null)
-                ),
-                listOf(
-                        Dynamic(
-                                "Comment",
-                                "comment",
-                                "string",
-                                "An optional comment to include with your vote.",
-                                contractId)
-                )
-        ))
+        return tx.voteCode(contractId, suggestionId)
     }
 
     suspend fun localBitmapUri(imageUrl: String, path: File) = withContext(Dispatchers.Default) {
-        val image = Coil.get(imageUrl) as BitmapDrawable
-        val bmp = image.bitmap
         var bmpUri: Uri? = null
         try {
+            val image = Coil.get(imageUrl) as BitmapDrawable
+            val bmp = image.bitmap
             val file = File(path, "share_image_${System.currentTimeMillis()}.png")
             val out = FileOutputStream(file)
             bmp.compress(Bitmap.CompressFormat.PNG, 90, out)
             out.close()
             bmpUri = Uri.fromFile(file)
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             e.printStackTrace()
         }
 

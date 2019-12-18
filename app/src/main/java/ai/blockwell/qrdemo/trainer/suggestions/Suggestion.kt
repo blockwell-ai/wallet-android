@@ -15,7 +15,7 @@ data class Suggestion(
 
     init {
         val index = fullText.indexOf(":")
-        if (index == -1) {
+        if (index == -1 || index > 12) {
             text = fullText
             tag = ""
         } else {

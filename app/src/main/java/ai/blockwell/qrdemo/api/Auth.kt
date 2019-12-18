@@ -30,7 +30,7 @@ class Auth(val client: ApiClient) {
     suspend fun register(email: String, password: String) = withContext(Dispatchers.Default) {
         val response = client.post("api/auth/register",
                 AuthResponse.Deserializer,
-                AuthRequest(email, password, BuildConfig.TOKEN_ID))
+                AuthRequest(email, password, DataStore.tokenId))
 
         response.success { result ->
             DataStore.email = email
@@ -44,7 +44,7 @@ class Auth(val client: ApiClient) {
     suspend fun login(email: String, password: String) = withContext(Dispatchers.Default) {
         val response = client.post("api/auth/login",
                 AuthResponse.Deserializer,
-                AuthRequest(email, password, BuildConfig.TOKEN_ID))
+                AuthRequest(email, password, DataStore.tokenId))
 
         response.success {result ->
             DataStore.email = email
@@ -60,7 +60,8 @@ data class AuthRequest(val email: String, val password: String, val contractId: 
 
 data class AuthResponse(
         val token: String = "",
-        val expiration: Long = 0L
+        val expiration: Long = 0L,
+        val customToken: String? = null
 ) {
     object Deserializer : ResponseDeserializable<AuthResponse> {
         override fun deserialize(content: String) = Gson().fromJson(content, AuthResponse::class.java)

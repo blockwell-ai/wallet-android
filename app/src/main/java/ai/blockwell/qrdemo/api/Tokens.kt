@@ -16,11 +16,11 @@ import kotlin.coroutines.CoroutineContext
  */
 class Tokens(val client: ApiClient) {
 
-    suspend fun get() = withContext(Dispatchers.Default) {
-        val response = client.get("api/tokens/${BuildConfig.TOKEN_ID}/properties", TokensResponse.Deserializer)
+    suspend fun get(tokenId: String) = withContext(Dispatchers.Default) {
+        val response = client.get("api/tokens/${tokenId}/properties", TokensResponse.Deserializer)
 
         response.success { result ->
-            DataStore.tokenId = BuildConfig.TOKEN_ID
+            DataStore.tokenId = tokenId
             DataStore.tokenName = result.name
             DataStore.tokenSymbol = result.symbol
             DataStore.tokenDecimals =  result.decimals.toInt()

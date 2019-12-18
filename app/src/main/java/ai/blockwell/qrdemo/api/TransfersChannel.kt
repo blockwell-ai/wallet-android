@@ -48,7 +48,7 @@ class TransfersChannel(val client: ApiClient) : CoroutineScope {
      * Fetches the transfer history from the backend.
      */
     suspend fun refresh() {
-        val response = client.getWithAuth("api/tokens/${BuildConfig.TOKEN_ID}/transfers",
+        val response = client.getWithAuth("api/tokens/${DataStore.tokenId}/transfers",
                 DataStore.accessToken,
                 Transfer.Deserializer)
 

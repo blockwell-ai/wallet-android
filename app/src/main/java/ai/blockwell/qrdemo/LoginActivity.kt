@@ -6,6 +6,8 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ai.blockwell.qrdemo.api.Auth
+import ai.blockwell.qrdemo.api.Tokens
+import ai.blockwell.qrdemo.data.DataStore
 import ai.blockwell.qrdemo.qr.TxActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.MainScope
@@ -19,6 +21,7 @@ import org.koin.android.ext.android.inject
 class LoginActivity : BaseActivity() {
 
     val auth: Auth by inject()
+    val tokens : Tokens by inject()
 
     var deepLink: String? = null
 
@@ -70,6 +73,11 @@ class LoginActivity : BaseActivity() {
             val result = auth.login(emailInput, passwordInput)
 
             result.fold({
+                if ((BuildConfig.APP_ID == "base" || BuildConfig.APP_ID == "blockwell") && it.customToken != null) {
+                    tokens.get(it.customToken)
+                    DataStore.suggestionsToken = it.customToken
+                }
+
                 val link = deepLink
 
                 if (link != null) {

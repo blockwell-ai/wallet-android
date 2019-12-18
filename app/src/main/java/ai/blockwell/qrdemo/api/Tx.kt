@@ -52,11 +52,17 @@ class Tx(val client: ApiClient) {
     }
 
     suspend fun createSuggestionCode(contractId: String) = withContext(Dispatchers.Default) {
-        client.getWithAuth("api/qr/suggestions/create/$contractId", DataStore.accessToken, TxResponse.Deserializer)
+        client.getWithAuth("api/qr/suggestions/create/$contractId", DataStore.accessToken, CreateQrResponse.Deserializer)
     }
 
-    suspend fun voteCode(contractId: String) = withContext(Dispatchers.Default) {
-        client.getWithAuth("api/qr/suggestions/vote/$contractId", DataStore.accessToken, TxResponse.Deserializer)
+    suspend fun voteCode(contractId: String, suggestionId: Int? = null) = withContext(Dispatchers.Default) {
+        var url = "api/qr/suggestions/vote/$contractId"
+
+        if (suggestionId != null) {
+            url += "?suggestion=$suggestionId"
+        }
+
+        client.getWithAuth(url, DataStore.accessToken, CreateQrResponse.Deserializer)
     }
 
     suspend fun findContractId(address: String) = withContext(Dispatchers.Default) {
