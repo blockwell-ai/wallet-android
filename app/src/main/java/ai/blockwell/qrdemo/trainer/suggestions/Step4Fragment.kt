@@ -45,7 +45,7 @@ class Step4Fragment : StepFragment(), Events.Subscriber {
         if (item is Suggestion) {
             submit.isEnabled = false
             scope.launch {
-                val result = model.voteOnSuggestion(item.index)
+                val result = model.voteOnSuggestion(item.id)
 
                 result.fold({
                     watchTransaction(it.id, "Voting...", "Voted successfully.") {

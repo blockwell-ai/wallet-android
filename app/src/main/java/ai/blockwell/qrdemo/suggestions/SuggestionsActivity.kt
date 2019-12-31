@@ -58,7 +58,11 @@ class SuggestionsActivity : BaseSuggestionsActivity() {
 
     override fun suggestionClick(suggestion: Suggestion) {
         scope.launch {
-            val result = votingModel.getVoteCode(contractId)
+            val result = if (suggestion.proposal) {
+                votingModel.getProposalVoteCode(contractId)
+            } else {
+                votingModel.getVoteCode(contractId)
+            }
 
             result.fold({
                 val url = "https://qr.blockwell.ai/${it.shortcode}"

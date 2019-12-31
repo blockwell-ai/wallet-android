@@ -143,7 +143,7 @@ class TxSuccessActivity : BaseActivity() {
 
         job = scope.launch {
             for ((index, view) in stepViews.withIndex()) {
-                Timber.d { "Loading status for index $index with ${view.step.transactionId}" }
+                Timber.d { "Loading status for id $index with ${view.step.transactionId}" }
                 if (txStatus.size > index) {
                     view.updateStatus(txStatus[index])
                     Timber.d { "Already had cached status" }

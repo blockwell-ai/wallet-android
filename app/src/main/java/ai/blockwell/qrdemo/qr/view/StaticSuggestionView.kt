@@ -1,7 +1,10 @@
 package ai.blockwell.qrdemo.qr.view
 
 import ai.blockwell.qrdemo.R
-import ai.blockwell.qrdemo.api.*
+import ai.blockwell.qrdemo.api.Argument
+import ai.blockwell.qrdemo.api.ArgumentValue
+import ai.blockwell.qrdemo.api.SuggestionArgumentValue
+import ai.blockwell.qrdemo.api.TxResponse
 import ai.blockwell.qrdemo.viewmodel.VotingModel
 import android.annotation.SuppressLint
 import android.content.Context
@@ -31,7 +34,7 @@ class StaticSuggestionView(context: Context, contract: String, final override va
     override fun update(newValue: ArgumentValue) {
         if (newValue is SuggestionArgumentValue) {
             setSuggestion(newValue.suggestion)
-        } else {
+        } else if (newValue.getValue().isNotEmpty()) {
             try {
                 loadSuggestion(newValue.getValue().toInt())
             } catch (e: Exception) {

@@ -1,19 +1,20 @@
 package ai.blockwell.qrdemo.viewmodel
 
-import ai.blockwell.qrdemo.api.ApiClient
-import ai.blockwell.qrdemo.api.CreateQrResponse
-import ai.blockwell.qrdemo.api.Proxy
-import ai.blockwell.qrdemo.api.Tx
-import ai.blockwell.qrdemo.data.DataStore
+import ai.blockwell.qrdemo.api.*
 import ai.blockwell.qrdemo.trainer.suggestions.Suggestion
+import ai.blockwell.qrdemo.trainer.suggestions.SuggestionType
+import ai.blockwell.qrdemo.utils.background
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kittinunf.result.Result
-import kotlinx.coroutines.Deferred
+import com.github.kittinunf.result.map
+import com.google.gson.JsonArray
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 
 class VotingModel(val client: ApiClient, val proxy: Proxy) : ViewModel() {
     private val tx = Tx(client)
+    private val voting = Voting(client)
 
     fun getSuggestion(contractId: String, suggestionId: Int) = viewModelScope.async {
         val textAsync = async { proxy.contractCall(contractId, "getSuggestionText", listOf(suggestionId.toString())) }
@@ -25,25 +26,17 @@ class VotingModel(val client: ApiClient, val proxy: Proxy) : ViewModel() {
         val result: Result<Suggestion, Exception> = when {
             text.component2() != null -> Result.error(text.component2() as Exception)
             votes.component2() != null -> Result.error(text.component2() as Exception)
-            else -> Result.success(Suggestion(suggestionId, text.get().data.asString, votes.get().data.asInt))
+            else -> Result.success(Suggestion.parse(suggestionId, text.get().data.asString, votes.get().data.asString))
         }
 
         result
     }
 
-    fun getSuggestions(contractId: String) = viewModelScope.async {
-        try {
-            val count = proxy.contractCall(contractId, "suggestionCount").get().data.asInt
-            val votesAsync = async { proxy.contractCall(contractId, "getAllVotes") }
-            val texts = getAllSuggestionTexts(contractId, count).get()
-
-            val votes = votesAsync.await().get().data.asJsonArray.mapIndexed { index, element ->
-                Suggestion(index, texts[index], element.asString.toInt())
-            }
-
-            Result.of(votes)
-        } catch (e: Exception) {
-            Result.error(e)
+    suspend fun getSuggestions(contractId: String, type: SuggestionType = SuggestionType.ALL) = background {
+        when (type) {
+            SuggestionType.ALL -> voting.getAll(contractId)
+            SuggestionType.SUGGESTION -> voting.getSuggestions(contractId)
+            SuggestionType.PROPOSAL -> voting.getProposals(contractId)
         }
     }
 
@@ -60,25 +53,6 @@ class VotingModel(val client: ApiClient, val proxy: Proxy) : ViewModel() {
     suspend fun getVoteCode(contractId: String) =
             tx.voteCode(contractId)
 
-    /**
-     * Gets all suggestion texts using the new method if possible, falls back to old method.
-     */
-    private suspend fun getAllSuggestionTexts(contractId: String, count: Int)
-            : Result<List<String>, Exception> {
-        val res = proxy.contractCall(contractId, "getAllSuggestionTexts")
-
-        val texts = res.fold({
-            it.data.asString.split("|")
-        }, {
-            (0 until count)
-                    .map {
-                        proxy.contractCall(contractId, "getSuggestionText", listOf(it.toString()))
-                    }
-                    .map {
-                        it.get().data.asString
-                    }
-        })
-
-        return Result.of(texts)
-    }
+    suspend fun getProposalVoteCode(contractId: String) =
+            tx.proposalVoteCode(contractId)
 }

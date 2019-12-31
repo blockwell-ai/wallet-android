@@ -120,4 +120,7 @@
     <string name="suggestions_viewer">Suggestions Viewer</string>
     <string name="contract_address">Contract Address</string>
     <string name="invalid_address">That is not a valid Ethereum address, please try again.</string>
+    <string name="proposal">Proposal</string>
+    <string name="select_proposal">Select proposal to vote for</string>
+    <string name="proposals">Proposals</string>
 </resources>

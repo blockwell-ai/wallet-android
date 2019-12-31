@@ -3,6 +3,7 @@ package ai.blockwell.qrdemo.qr
 import ai.blockwell.qrdemo.R
 import ai.blockwell.qrdemo.suggestions.BaseSuggestionsActivity
 import ai.blockwell.qrdemo.trainer.suggestions.Suggestion
+import ai.blockwell.qrdemo.trainer.suggestions.SuggestionType
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -16,17 +17,23 @@ class QrSuggestionsActivity : BaseSuggestionsActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        supportActionBar?.setSubtitle(R.string.select_suggestion)
-
         name = intent.getStringExtra("name") ?: ""
         contractId = intent.getStringExtra("contractId") ?: ""
+        val type = SuggestionType.valueOf(intent.getStringExtra("type") ?: "SUGGESTION")
+
+        if (type == SuggestionType.SUGGESTION) {
+            supportActionBar?.setSubtitle(R.string.select_suggestion)
+        } else {
+            supportActionBar?.setSubtitle(R.string.select_proposal)
+            title = getString(R.string.proposals)
+        }
 
         if (name.isEmpty() || contractId.isEmpty()) {
             val dialog = alert(R.string.unknown_error)
             dialog.onCancelled { finish() }
             dialog.show()
         } else {
-            load()
+            load(type)
         }
     }
 

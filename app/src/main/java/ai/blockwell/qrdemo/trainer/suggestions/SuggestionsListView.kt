@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_suggestion.view.*
 import kotlinx.android.synthetic.main.view_suggestions_list.view.*
 import org.jetbrains.anko.layoutInflater
+import org.jetbrains.anko.textColorResource
 
 class SuggestionsListView : FrameLayout {
     @JvmOverloads
@@ -88,15 +89,23 @@ class SuggestionsListView : FrameLayout {
 
     class SuggestionHolder(val view: View) : RecyclerView.ViewHolder(view) {
         fun bind(suggestion: Suggestion) {
-            view.text.text = suggestion.text
-            view.votes.text = suggestion.votes.toString(10)
-            view.number.text = view.context.getString(R.string.suggestion_num, suggestion.index)
+            view.text.text = suggestion.suggestion
+            view.votes.text = suggestion.votes
+            view.number.text = view.context.getString(R.string.suggestion_num, suggestion.id)
 
             if (suggestion.tag.isNotEmpty()) {
                 view.tagView.text = suggestion.tag
                 view.tagView.visibility = View.VISIBLE
             } else {
                 view.tagView.visibility = View.GONE
+            }
+
+            if (suggestion.proposal) {
+                view.proposal.visibility = View.VISIBLE
+                view.votes.textColorResource = R.color.proposal
+            } else {
+                view.proposal.visibility = View.GONE
+                view.votes.textColorResource = R.color.colorTextEmphasis
             }
         }
     }

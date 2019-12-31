@@ -3,6 +3,7 @@ package ai.blockwell.qrdemo.suggestions
 import ai.blockwell.qrdemo.BaseActivity
 import ai.blockwell.qrdemo.R
 import ai.blockwell.qrdemo.trainer.suggestions.Suggestion
+import ai.blockwell.qrdemo.trainer.suggestions.SuggestionType
 import ai.blockwell.qrdemo.viewmodel.VotingModel
 import android.app.Activity
 import android.content.Intent
@@ -40,9 +41,9 @@ abstract class BaseSuggestionsActivity : BaseActivity() {
 
     }
 
-    protected fun load() {
+    protected fun load(type: SuggestionType = SuggestionType.ALL) {
         scope.launch {
-            val result = votingModel.getSuggestions(contractId).await()
+            val result = votingModel.getSuggestions(contractId, type)
             result.fold({
                 suggestions_list.setSuggestions(it)
             }, {

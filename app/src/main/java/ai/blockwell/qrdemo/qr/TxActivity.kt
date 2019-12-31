@@ -7,6 +7,7 @@ import ai.blockwell.qrdemo.qr.view.InputArgumentView
 import ai.blockwell.qrdemo.qr.view.InputSuggestionView
 import ai.blockwell.qrdemo.qr.view.QrStepView
 import ai.blockwell.qrdemo.trainer.suggestions.Suggestion
+import ai.blockwell.qrdemo.trainer.suggestions.SuggestionType
 import ai.blockwell.qrdemo.viewmodel.TxModel
 import ai.blockwell.qrdemo.viewmodel.VotingModel
 import android.app.Activity
@@ -147,7 +148,7 @@ class TxActivity : BaseActivity() {
         }
 
         dynamicViews = tx.dynamic.map {
-            val view: DynamicView = if (it.type == "suggestion") {
+            val view: DynamicView = if (it.type == "suggestion" || it.type == "proposal") {
                 val view = InputSuggestionView(this, it, tx, votingModel)
                 view.setOnClickListener { _ -> votingClick(it) }
 
@@ -187,9 +188,16 @@ class TxActivity : BaseActivity() {
     }
 
     private fun votingClick(dynamic: Dynamic) {
+        val type = if (dynamic.type == "suggestion") {
+            SuggestionType.SUGGESTION
+        } else {
+            SuggestionType.PROPOSAL
+        }
+
         startActivityForResult<QrSuggestionsActivity>(QrSuggestionsActivity.REQUEST,
                 "name" to dynamic.name,
-                "contractId" to dynamic.contractId
+                "contractId" to dynamic.contractId,
+                "type" to type.name
         )
     }
 

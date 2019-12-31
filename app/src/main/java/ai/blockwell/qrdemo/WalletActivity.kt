@@ -113,22 +113,38 @@ class WalletActivity : BaseActivity() {
 
         if (!DataStore.introShown) {
             recycler.doOnLayout {
-                val x = displayMetrics.widthPixels - 45 * displayMetrics.density
-                val y = displayMetrics.heightPixels - 45 * displayMetrics.density
+                var x = displayMetrics.widthPixels - 45 * displayMetrics.density
+                var y = displayMetrics.heightPixels - 45 * displayMetrics.density
                 Log.d("Overlay", "$x - $y")
-                val target = SimpleTarget.Builder(this)
+
+                val targets = arrayListOf<SimpleTarget>()
+
+                targets.add(SimpleTarget.Builder(this)
                         .setPoint(x, y)
                         .setOverlayPoint(16f * displayMetrics.density, y - 150f * displayMetrics.density)
                         .setShape(Circle(45f * displayMetrics.density))
                         .setTitle("Scan QR Codes")
                         .setDescription("Easily perform transactions on the blockchain by scanning QR Codes.")
-                        .build()
+                        .build())
+
+                x  = displayMetrics.widthPixels - 22 * displayMetrics.density
+                y = 50f * displayMetrics.density
+
+                if (DataStore.suggestionsToken.isNotEmpty()) {
+                    targets.add(SimpleTarget.Builder(this)
+                            .setPoint(x, y)
+                            .setOverlayPoint(16f * displayMetrics.density, 80f * displayMetrics.density)
+                            .setShape(Circle(30f * displayMetrics.density))
+                            .setTitle("Suggestions Viewer")
+                            .setDescription("Use the menu to open the Suggestions Viewer to view suggestions and vote.")
+                            .build())
+                }
 
                 Spotlight.with(this)
                         .setOverlayColor(R.color.overlay)
                         .setAnimation(DecelerateInterpolator(2f))
-                        .setDuration(500)
-                        .setTargets(target)
+                        .setDuration(200)
+                        .setTargets(targets)
                         .setClosedOnTouchedOutside(true)
                         .setOnSpotlightStateListener(object : OnSpotlightStateChangedListener {
                             override fun onStarted() {

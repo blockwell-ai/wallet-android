@@ -65,6 +65,16 @@ class Tx(val client: ApiClient) {
         client.getWithAuth(url, DataStore.accessToken, CreateQrResponse.Deserializer)
     }
 
+    suspend fun proposalVoteCode(contractId: String, suggestionId: Int? = null) = withContext(Dispatchers.Default) {
+        var url = "api/qr/suggestions/proposal/$contractId"
+
+        if (suggestionId != null) {
+            url += "?suggestion=$suggestionId"
+        }
+
+        client.getWithAuth(url, DataStore.accessToken, CreateQrResponse.Deserializer)
+    }
+
     suspend fun findContractId(address: String) = withContext(Dispatchers.Default) {
         client.getWithAuth("api/qr/contract/${address}", DataStore.accessToken, ContractResponse.Deserializer)
     }
@@ -155,7 +165,7 @@ data class ArrayArgumentValue(private val values: List<String>) : ArgumentValue(
 
 @Parcelize
 data class SuggestionArgumentValue(val suggestion: Suggestion) : ArgumentValue(), Parcelable {
-    override fun getValue() = suggestion.index.toString()
+    override fun getValue() = suggestion.id.toString()
 }
 
 data class SubmitRequest(

@@ -8,8 +8,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import kotlinx.android.synthetic.main.view_voting_argument.view.*
-import kotlinx.coroutines.launch
-import org.jetbrains.anko.alert
 import org.jetbrains.anko.textColorResource
 
 @SuppressLint("ViewConstructor")
@@ -41,7 +39,7 @@ class InputSuggestionView(context: Context, override val dynamic: Dynamic, tx: T
     }
 
     override fun validate(): Boolean {
-        return if (suggestion.index == -1) {
+        return if (suggestion.id == -1) {
             help.textColorResource = R.color.error
             help.text = context.getString(R.string.select_what_to_vote)
             false

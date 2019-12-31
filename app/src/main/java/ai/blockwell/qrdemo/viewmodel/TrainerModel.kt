@@ -60,7 +60,7 @@ class TrainerModel(val client: ApiClient, val proxy: Proxy) : ViewModel() {
                 }
 
         val votes = votesDeferred.await().get().data.asJsonArray.mapIndexed { index, element ->
-            Suggestion(index, texts[index], element.asString.toInt())
+            Suggestion.parse(index, texts[index], element.asString)
         }
 
         Result.success(votes)

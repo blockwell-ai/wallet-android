@@ -27,7 +27,7 @@ class QrStepView(context: Context, val code: TxResponse, val step: Step, val vot
         contract.text = step.address
 
         step.arguments.forEach {
-            val view: ArgumentView = if (it.type == "suggestion") {
+            val view: ArgumentView = if (it.type == "suggestion" || it.type == "proposal") {
                 StaticSuggestionView(context, step.contractId, it, code, votingModel)
             } else {
                 StaticArgumentView(context, it)
@@ -38,7 +38,7 @@ class QrStepView(context: Context, val code: TxResponse, val step: Step, val vot
         }
 
         if (step.transactionId != null) {
-            status_wrap.visibility = View.VISIBLE;
+            status_wrap.visibility = View.VISIBLE
         }
     }
 

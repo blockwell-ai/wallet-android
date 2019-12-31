@@ -19,7 +19,7 @@ import org.jetbrains.anko.textColorResource
 abstract class SuggestionView(context: Context, val tx: TxResponse, val model: VotingModel) : FrameLayout(context) {
     val scope = MainScope()
 
-    var suggestion = Suggestion(-1, "", 0)
+    var suggestion = Suggestion(-1, mapOf(), "0")
         private set
 
     lateinit var contractId: String
@@ -36,7 +36,7 @@ abstract class SuggestionView(context: Context, val tx: TxResponse, val model: V
     }
 
     protected open fun render(sugg: Suggestion) {
-        suggestion_text.text = sugg.text
+        suggestion_text.text = sugg.suggestion
         suggestion_text.textColorResource = R.color.colorText
 
         if (sugg.tag.isNotEmpty()) {
