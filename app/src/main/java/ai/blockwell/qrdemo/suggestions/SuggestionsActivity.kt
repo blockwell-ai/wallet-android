@@ -9,6 +9,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import com.github.kittinunf.result.success
 import kotlinx.android.synthetic.main.activity_suggestions.*
@@ -39,6 +40,7 @@ class SuggestionsActivity : BaseSuggestionsActivity() {
     override fun onResume() {
         super.onResume()
         load()
+        loadVotingInfo()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -102,6 +104,18 @@ class SuggestionsActivity : BaseSuggestionsActivity() {
 
             name.success {
                 supportActionBar?.subtitle = it.data.asString
+            }
+        }
+    }
+
+    private fun loadVotingInfo() {
+        scope.launch {
+            val voting = votingModel.getVotesLeft(contractId)
+
+            voting.success {
+                votes_left.text = it.first
+                votes_refresh.text = it.second
+                voting_wrapper.visibility = View.VISIBLE
             }
         }
     }

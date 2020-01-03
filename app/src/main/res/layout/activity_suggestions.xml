@@ -34,11 +34,61 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <ai.blockwell.qrdemo.trainer.suggestions.SuggestionsListView
-            android:id="@+id/suggestions_list"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            android:orientation="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
+                android:id="@+id/voting_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/faintBackground"
+                android:padding="8dp"
+                android:elevation="3dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/votes_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextEmphasis"
+                    android:lines="1"
+                    tools:text="123" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="@string/votes_left" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="3dp"
+                    android:textAlignment="viewEnd"
+                    android:text="@string/votes_refresh" />
+
+                <TextView
+                    android:id="@+id/votes_refresh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextEmphasis"
+                    android:lines="1"
+                    tools:text=" in 20 minutes" />
+
+            </LinearLayout>
+
+            <ai.blockwell.qrdemo.trainer.suggestions.SuggestionsListView
+                android:id="@+id/suggestions_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"

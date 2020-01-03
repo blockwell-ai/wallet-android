@@ -123,4 +123,6 @@
     <string name="proposal">Proposal</string>
     <string name="select_proposal">Select proposal to vote for</string>
     <string name="proposals">Proposals</string>
+    <string name="votes_left">Votes Left</string>
+    <string name="votes_refresh">Votes Refresh </string>
 </resources>

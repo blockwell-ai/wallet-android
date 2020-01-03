@@ -1,6 +1,7 @@
 package ai.blockwell.qrdemo.viewmodel
 
 import ai.blockwell.qrdemo.api.*
+import ai.blockwell.qrdemo.data.DataStore
 import ai.blockwell.qrdemo.trainer.suggestions.Suggestion
 import ai.blockwell.qrdemo.trainer.suggestions.SuggestionType
 import ai.blockwell.qrdemo.utils.background
@@ -43,6 +44,26 @@ class VotingModel(val client: ApiClient, val proxy: Proxy) : ViewModel() {
     fun getContractName(contractId: String) = viewModelScope.async {
         // Proxy through to API Miner
         proxy.contractCall(contractId, "name")
+    }
+
+    suspend fun getVotesLeft(contractId: String) = background {
+        val votesLeft = proxy.contractCall(contractId, "votesLeft", listOf(DataStore.accountAddress))
+        val period = proxy.contractCall(contractId, "allocationPeriod")
+        val start = proxy.contractCall(contractId, "lastAllocation")
+
+        try {
+            val diff = (start.get().data.asString.toInt() + period.get().data.asString.toInt()) - System.currentTimeMillis()/1000
+            val refresh = when {
+                diff <= 0 -> "fully refreshed"
+                diff <= 120 -> "in $diff seconds"
+                diff <= 3600 -> "in ${diff/60} minutes"
+                diff <= 86400 -> "in ${diff/3600} hours"
+                else -> "in ${diff/86400} days"
+            }
+            Result.success(Pair(votesLeft.get().data.asString!!, refresh))
+        } catch (e: Exception) {
+            Result.error(e)
+        }
     }
 
     suspend fun getContractId(address: String) = tx.findContractId(address)
