@@ -29,7 +29,7 @@ class StaticArgumentView(context: Context, override val arg: Argument) : FrameLa
 
     init {
         context.layoutInflater.inflate(R.layout.view_static_argument, this, true)
-        label.text = arg.label
+        label.text = arg.getLabel()
         if (arg.value != null) {
             update(arg.value)
         }

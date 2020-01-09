@@ -29,6 +29,8 @@ class QrStepView(context: Context, val code: TxResponse, val step: Step, val vot
         step.arguments.forEach {
             val view: ArgumentView = if (it.type == "suggestion" || it.type == "proposal") {
                 StaticSuggestionView(context, step.contractId, it, code, votingModel)
+            } else if (it.source != null && it.source.type == "json") {
+                JsonArgumentView(context, it)
             } else {
                 StaticArgumentView(context, it)
             }
@@ -43,7 +45,11 @@ class QrStepView(context: Context, val code: TxResponse, val step: Step, val vot
     }
 
     fun update(dynamic: Map<String, ArgumentValue>) {
-        views.forEach { view ->
+        updateViews(views, dynamic)
+    }
+
+    private fun updateViews(list: List<ArgumentView>, dynamic: Map<String, ArgumentValue>) {
+        list.forEach { view ->
             if (view.arg.value == null) {
                 view.arg.source?.apply {
                     when (type) {
@@ -72,6 +78,9 @@ class QrStepView(context: Context, val code: TxResponse, val step: Step, val vot
                             }
                             view.update(StringArgumentValue(value))
                         }
+                        "json" -> {
+                            updateViews((view as JsonArgumentView).views, dynamic)
+                        }
                     }
                     Timber.d {"Updated ${view.arg.name} with ${view.value}"}
                 }
@@ -80,10 +89,18 @@ class QrStepView(context: Context, val code: TxResponse, val step: Step, val vot
     }
 
     fun updateOne(name: String, value: ArgumentValue) {
-        views.forEach { view ->
+        updateOneInViews(views, name, value)
+    }
+
+    private fun updateOneInViews(list: List<ArgumentView>, name: String, value: ArgumentValue) {
+        list.forEach { view ->
             val source = view.arg.source
-            if (view.arg.value == null && source != null && source.name == name) {
-                view.update(value)
+            if (view.arg.value == null && source != null) {
+                if (source.type == "json") {
+                    updateOneInViews((view as JsonArgumentView).views, name, value)
+                } else if (source.name == name) {
+                    view.update(value)
+                }
             }
         }
     }

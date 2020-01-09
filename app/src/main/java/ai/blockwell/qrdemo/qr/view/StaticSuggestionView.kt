@@ -22,7 +22,7 @@ class StaticSuggestionView(context: Context, contract: String, final override va
 
     init {
         contractId = contract
-        label.text = arg.label
+        label.text = arg.getLabel()
 
         if (arg.value != null) {
             update(arg.value)

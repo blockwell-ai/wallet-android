@@ -122,20 +122,25 @@ data class Dynamic(
 
 @Parcelize
 data class Argument(
-        val label: String,
+        private val label: String? = null,
         val name: String,
         val type: String,
         val decimals: Int? = null,
         val symbol: String? = null,
         val value: @RawValue ArgumentValue? = null,
-        val source: Source? = null
-) : Parcelable
+        val source: Source? = null,
+        val path: String? = null // Only used with JSON source values, not regular arguments
+) : Parcelable {
+    fun getLabel() = label ?: name
+}
 
 @Parcelize
 data class Source(
         val type: String,
-        val name: String,
-        val parameter: String? = null
+        val name: String? = null,
+        val parameter: String? = null,
+        val jsonAssignTo: String? = null,
+        val json: List<Argument>?
 ) : Parcelable
 
 abstract class ArgumentValue {
