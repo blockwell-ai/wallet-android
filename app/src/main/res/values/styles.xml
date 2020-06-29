@@ -12,6 +12,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>
+        <item name="textInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">

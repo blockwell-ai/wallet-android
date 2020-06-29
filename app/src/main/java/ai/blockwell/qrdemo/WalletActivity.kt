@@ -113,7 +113,7 @@ class WalletActivity : BaseActivity() {
             popup.show()
         }
 
-        if (!DataStore.introShown) {
+        if (true) {
             recycler.doOnLayout {
                 var x = displayMetrics.widthPixels - 45 * displayMetrics.density
                 var y = displayMetrics.heightPixels - 45 * displayMetrics.density
@@ -122,27 +122,25 @@ class WalletActivity : BaseActivity() {
                 val targets = arrayListOf<Target>()
 
                 val targetOne = layoutInflater.inflate(R.layout.spotlight_qr, FrameLayout(this))
+                targetOne.setOnClickListener { spotlight?.next() }
                 targets.add(Target.Builder()
                         .setAnchor(x, y)
                         .setOverlay(targetOne)
-                        //.setOverlayPoint(16f * displayMetrics.density, y - 150f * displayMetrics.density)
                         .setShape(Circle(45f * displayMetrics.density))
-                        //.setTitle("Scan QR Codes")
-                        //.setDescription("Easily perform transactions on the blockchain by scanning QR Codes.")
                         .build())
 
-//                x  = displayMetrics.widthPixels - 22 * displayMetrics.density
-//                y = 50f * displayMetrics.density
-//
-//                if (DataStore.suggestionsToken.isNotEmpty()) {
-//                    targets.add(Target.Builder()
-//                            .setAnchor(x, y)
-//                            //.setOverlayPoint(16f * displayMetrics.density, 80f * displayMetrics.density)
-//                            .setShape(Circle(30f * displayMetrics.density))
-//                            //.setTitle("Suggestions Viewer")
-//                            //.setDescription("Use the menu to open the Suggestions Viewer to view suggestions and vote.")
-//                            .build())
-//                }
+                x  = displayMetrics.widthPixels - 22 * displayMetrics.density
+                y = 50f * displayMetrics.density
+
+                val targetTwo = layoutInflater.inflate(R.layout.spotlight_suggestions, FrameLayout(this))
+                targetTwo.setOnClickListener { spotlight?.next() }
+                if (DataStore.suggestionsToken.isNotEmpty()) {
+                    targets.add(Target.Builder()
+                            .setAnchor(x, y)
+                            .setOverlay(targetTwo)
+                            .setShape(Circle(30f * displayMetrics.density))
+                            .build())
+                }
 
                 spotlight = Spotlight.Builder(this)
                         .setBackgroundColor(R.color.overlay)

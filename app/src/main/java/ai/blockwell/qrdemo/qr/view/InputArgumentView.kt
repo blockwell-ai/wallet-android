@@ -87,7 +87,7 @@ class InputArgumentView(context: Context, override val dynamic: Dynamic, val sym
         })
     }
 
-    fun setValue(value: String) {
+    fun setValue(value: String?) {
         input.setText(value)
     }
 

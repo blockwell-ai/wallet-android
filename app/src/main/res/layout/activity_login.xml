@@ -52,29 +52,30 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:hint="@string/prompt_email">
 
                         <AutoCompleteTextView
                             android:id="@+id/email"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/prompt_email"
                             android:inputType="textEmailAddress"
                             android:maxLines="1"
-                            android:singleLine="true" />
+                            android:singleLine="true"
+                            style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:passwordToggleEnabled="true">
+                        app:passwordToggleEnabled="true"
+                        android:hint="@string/prompt_password">
 
-                        <EditText
+                        <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/password"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/prompt_password"
                             android:imeActionId="6"
                             android:imeActionLabel="@string/action_sign_in_short"
                             android:imeOptions="actionUnspecified"
