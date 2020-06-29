@@ -1,5 +1,6 @@
 package ai.blockwell.qrdemo.viewmodel
 
+import ai.blockwell.qrdemo.WalletApplication
 import ai.blockwell.qrdemo.api.*
 import ai.blockwell.qrdemo.data.DataStore
 import android.graphics.Bitmap
@@ -8,7 +9,9 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.Coil
-import coil.api.get
+import coil.ImageLoader
+import coil.request.GetRequest
+import coil.request.SuccessResult
 import com.github.kittinunf.result.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -17,7 +20,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class TxModel(val client: ApiClient) : ViewModel() {
+class TxModel(val client: ApiClient, private val imageLoader: ImageLoader) : ViewModel() {
     private val tx = Tx(client)
 
     suspend fun getCode(url: Uri) = viewModelScope.async {
@@ -37,7 +40,10 @@ class TxModel(val client: ApiClient) : ViewModel() {
     suspend fun localBitmapUri(imageUrl: String, path: File) = withContext(Dispatchers.Default) {
         var bmpUri: Uri? = null
         try {
-            val image = Coil.get(imageUrl) as BitmapDrawable
+            val request = GetRequest.Builder(WalletApplication.app)
+                    .data(imageUrl)
+                    .build()
+            val image = (imageLoader.execute(request) as SuccessResult).drawable as BitmapDrawable
             val bmp = image.bitmap
             val file = File(path, "share_image_${System.currentTimeMillis()}.png")
             val out = FileOutputStream(file)

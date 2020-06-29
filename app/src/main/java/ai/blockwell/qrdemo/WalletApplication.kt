@@ -10,7 +10,9 @@ import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.stetho.StethoHook
 import com.google.gson.Gson
 import org.koin.android.ext.android.get
-import org.koin.android.ext.android.startKoin
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 import timber.log.Timber.DebugTree
 
 @Suppress("unused")
@@ -38,8 +40,11 @@ class WalletApplication : Application() {
         )
         FuelManager.instance.hook = StethoHook()
 
-        // Dependency injection
-        startKoin(listOf(mainModule))
+        startKoin {
+            androidLogger()
+            androidContext(this@WalletApplication)
+            modules(mainModule)
+        }
 
         // Need to inject this directly to Kotpref
         Kotpref.gson = get<Gson>()

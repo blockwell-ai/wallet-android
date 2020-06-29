@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_shortcut_screens.*
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
-import org.koin.android.architecture.ext.viewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class ShortcutsActivity : BaseActivity() {
     val model by viewModel<TxModel>()

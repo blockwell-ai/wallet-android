@@ -19,20 +19,22 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.animation.DecelerateInterpolator
+import android.widget.FrameLayout
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.doOnLayout
+import com.github.ajalt.timberkt.Timber
 import com.google.android.material.snackbar.Snackbar
-import com.takusemba.spotlight.OnSpotlightStateChangedListener
+import com.takusemba.spotlight.OnSpotlightListener
 import com.takusemba.spotlight.Spotlight
+import com.takusemba.spotlight.Target
 import com.takusemba.spotlight.shape.Circle
-import com.takusemba.spotlight.target.SimpleTarget
 import kotlinx.android.synthetic.main.activity_wallet.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.*
-import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 
 /**
  * The main wallet activity.
@@ -40,11 +42,11 @@ import org.koin.android.ext.android.inject
 class WalletActivity : BaseActivity() {
 
     val auth: Auth by inject()
-    val model by viewModel<WalletModel>()
+    val model : WalletModel by viewModel()
 
     // The parent job for all background work this activity subscribes to
     var job: Job? = null
-    var spotlight = false
+    var spotlight: Spotlight? = null
 
     lateinit var adapter: TransferAdapter
 
@@ -77,7 +79,7 @@ class WalletActivity : BaseActivity() {
 
         account_address.setOnClickListener {
             val clipData = ClipData.newPlainText("Account address", account_address.text)
-            clipboardManager.primaryClip = clipData
+            clipboardManager.setPrimaryClip(clipData)
             longToast(R.string.account_copied)
         }
         wallet_menu.setOnClickListener {
@@ -115,47 +117,49 @@ class WalletActivity : BaseActivity() {
             recycler.doOnLayout {
                 var x = displayMetrics.widthPixels - 45 * displayMetrics.density
                 var y = displayMetrics.heightPixels - 45 * displayMetrics.density
-                Log.d("Overlay", "$x - $y")
+                Timber.d { "$x - $y" }
 
-                val targets = arrayListOf<SimpleTarget>()
+                val targets = arrayListOf<Target>()
 
-                targets.add(SimpleTarget.Builder(this)
-                        .setPoint(x, y)
-                        .setOverlayPoint(16f * displayMetrics.density, y - 150f * displayMetrics.density)
+                val targetOne = layoutInflater.inflate(R.layout.spotlight_qr, FrameLayout(this))
+                targets.add(Target.Builder()
+                        .setAnchor(x, y)
+                        .setOverlay(targetOne)
+                        //.setOverlayPoint(16f * displayMetrics.density, y - 150f * displayMetrics.density)
                         .setShape(Circle(45f * displayMetrics.density))
-                        .setTitle("Scan QR Codes")
-                        .setDescription("Easily perform transactions on the blockchain by scanning QR Codes.")
+                        //.setTitle("Scan QR Codes")
+                        //.setDescription("Easily perform transactions on the blockchain by scanning QR Codes.")
                         .build())
 
-                x  = displayMetrics.widthPixels - 22 * displayMetrics.density
-                y = 50f * displayMetrics.density
+//                x  = displayMetrics.widthPixels - 22 * displayMetrics.density
+//                y = 50f * displayMetrics.density
+//
+//                if (DataStore.suggestionsToken.isNotEmpty()) {
+//                    targets.add(Target.Builder()
+//                            .setAnchor(x, y)
+//                            //.setOverlayPoint(16f * displayMetrics.density, 80f * displayMetrics.density)
+//                            .setShape(Circle(30f * displayMetrics.density))
+//                            //.setTitle("Suggestions Viewer")
+//                            //.setDescription("Use the menu to open the Suggestions Viewer to view suggestions and vote.")
+//                            .build())
+//                }
 
-                if (DataStore.suggestionsToken.isNotEmpty()) {
-                    targets.add(SimpleTarget.Builder(this)
-                            .setPoint(x, y)
-                            .setOverlayPoint(16f * displayMetrics.density, 80f * displayMetrics.density)
-                            .setShape(Circle(30f * displayMetrics.density))
-                            .setTitle("Suggestions Viewer")
-                            .setDescription("Use the menu to open the Suggestions Viewer to view suggestions and vote.")
-                            .build())
-                }
-
-                Spotlight.with(this)
-                        .setOverlayColor(R.color.overlay)
+                spotlight = Spotlight.Builder(this)
+                        .setBackgroundColor(R.color.overlay)
                         .setAnimation(DecelerateInterpolator(2f))
                         .setDuration(200)
                         .setTargets(targets)
-                        .setClosedOnTouchedOutside(true)
-                        .setOnSpotlightStateListener(object : OnSpotlightStateChangedListener {
+                        .setOnSpotlightListener(object : OnSpotlightListener {
                             override fun onStarted() {
-                                spotlight = true
                             }
 
                             override fun onEnded() {
-                                spotlight = false
+                                spotlight = null
                             }
                         })
-                        .start()
+                        .build()
+
+                spotlight?.start()
             }
             DataStore.introShown = true
         }
@@ -215,9 +219,10 @@ class WalletActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if (spotlight) {
-            Spotlight.with(this).closeSpotlight()
-            spotlight = false
+        val spot = spotlight
+        if (spot != null) {
+            spot.finish()
+            spotlight = null
         } else {
             super.onBackPressed()
         }

@@ -125,4 +125,8 @@
     <string name="proposals">Proposals</string>
     <string name="votes_left">Votes Left</string>
     <string name="votes_refresh">Votes Refresh </string>
+    <string name="send_ether">Send Ether</string>
+    <string name="network_name">Network: %s</string>
+    <string name="scan_qr_codes">Scan QR Codes</string>
+    <string name="scan_qr_codes_description">Easily perform transactions on the blockchain by scanning QR Codes.</string>
 </resources>

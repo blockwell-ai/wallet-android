@@ -31,6 +31,16 @@
         app:autoSizeTextType="uniform"
         tools:text="0xe8340FdfE79851e9E117b3033E147a654dbDb0Aa" />
 
+    <TextView
+        android:id="@+id/network"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="16dp"
+        android:textSize="13sp"
+        android:maxLines="1"
+        android:visibility="gone"
+        tools:text="Network: Rinkeby" />
+
     <LinearLayout
         android:id="@+id/status_wrap"
         android:layout_width="match_parent"

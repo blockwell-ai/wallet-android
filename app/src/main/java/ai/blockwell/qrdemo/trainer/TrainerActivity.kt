@@ -11,13 +11,14 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.github.ajalt.timberkt.Timber
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_trainer.*
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
-import org.koin.android.architecture.ext.viewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class TrainerActivity : BaseActivity(), TrainerFragment.OnOptionSelectedListener {
 
@@ -63,11 +64,11 @@ class TrainerActivity : BaseActivity(), TrainerFragment.OnOptionSelectedListener
         }
     }
 
-    override fun onAttachFragment(fragment: Fragment?) {
+    override fun onAttachFragment(fragment: Fragment) {
         super.onAttachFragment(fragment)
 
         if (fragment is TrainerFragment) {
-            Log.d("TrainerActivity", "Added listener")
+            Timber.d { "Added listener" }
             fragment.setOptionSelectedListener(this)
         }
     }

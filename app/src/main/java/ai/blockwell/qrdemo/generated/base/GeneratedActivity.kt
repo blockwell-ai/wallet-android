@@ -8,9 +8,10 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.github.ajalt.timberkt.Timber
 import kotlinx.android.synthetic.main.activity_trainer.*
 import kotlinx.coroutines.MainScope
-import org.koin.android.architecture.ext.viewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class GeneratedActivity : AppCompatActivity(), GeneratedFragment.OnOptionSelectedListener {
 
@@ -30,11 +31,11 @@ class GeneratedActivity : AppCompatActivity(), GeneratedFragment.OnOptionSelecte
         }.commit()
     }
 
-    override fun onAttachFragment(fragment: Fragment?) {
+    override fun onAttachFragment(fragment: Fragment) {
         super.onAttachFragment(fragment)
 
         if (fragment is GeneratedFragment) {
-            Log.d("TrainerActivity", "Added listener")
+            Timber.d { "Added listener" }
             fragment.setOptionSelectedListener(this)
         }
     }

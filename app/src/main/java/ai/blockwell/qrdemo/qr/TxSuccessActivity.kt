@@ -24,7 +24,7 @@ import kotlinx.coroutines.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.longToast
-import org.koin.android.architecture.ext.viewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.android.ext.android.inject
 
 

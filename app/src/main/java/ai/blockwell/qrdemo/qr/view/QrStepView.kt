@@ -7,14 +7,13 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
-import androidx.core.content.ContextCompat.startActivity
 import com.github.ajalt.timberkt.Timber
 import kotlinx.android.synthetic.main.view_qr_step.view.*
 import org.jetbrains.anko.layoutInflater
 import org.jetbrains.anko.textColorResource
+import org.jetbrains.anko.textResource
 
 @SuppressLint("ViewConstructor")
 class QrStepView(context: Context, val code: TxResponse, val step: Step, val votingModel: VotingModel) : FrameLayout(context) {
@@ -23,12 +22,21 @@ class QrStepView(context: Context, val code: TxResponse, val step: Step, val vot
     init {
         context.layoutInflater.inflate(R.layout.view_qr_step, this, true)
 
-        function.text = step.method
-        contract.text = step.address
+        if (step.contractId != null) {
+            function.text = step.method
+            contract.text = step.address
+        } else if (step.network != null) {
+            function.textResource = R.string.send_ether
+
+            @SuppressLint("DefaultLocale")
+            network.text = context.getString(R.string.network_name, step.network.capitalize())
+            contract.visibility = View.GONE
+            network.visibility = View.VISIBLE
+        }
 
         step.arguments.forEach {
             val view: ArgumentView = if (it.type == "suggestion" || it.type == "proposal") {
-                StaticSuggestionView(context, step.contractId, it, code, votingModel)
+                StaticSuggestionView(context, step.contractId!!, it, code, votingModel)
             } else if (it.source != null && it.source.type == "json") {
                 JsonArgumentView(context, it)
             } else {
@@ -82,7 +90,7 @@ class QrStepView(context: Context, val code: TxResponse, val step: Step, val vot
                             updateViews((view as JsonArgumentView).views, dynamic)
                         }
                     }
-                    Timber.d {"Updated ${view.arg.name} with ${view.value}"}
+                    Timber.d { "Updated ${view.arg.name} with ${view.value}" }
                 }
             }
         }

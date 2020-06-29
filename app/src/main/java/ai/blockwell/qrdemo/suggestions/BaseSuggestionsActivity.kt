@@ -11,7 +11,7 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_suggestions.*
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
-import org.koin.android.architecture.ext.viewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 
 abstract class BaseSuggestionsActivity : BaseActivity() {
 

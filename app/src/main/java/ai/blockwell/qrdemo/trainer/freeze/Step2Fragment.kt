@@ -26,7 +26,7 @@ class Step2Fragment : StepFragment() {
             val clipData = ClipData.newPlainText("Wallet address", user_wallet.text)
 
             activity?.apply {
-                clipboardManager.primaryClip = clipData
+                clipboardManager.setPrimaryClip(clipData)
                 longToast(R.string.account_copied)
             }
         }

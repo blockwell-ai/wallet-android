@@ -24,7 +24,7 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.applyRecursively
-import org.koin.android.architecture.ext.sharedViewModel
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.ext.android.inject
 
 abstract class GuidedFragment : Fragment() {
