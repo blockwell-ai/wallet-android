@@ -113,7 +113,7 @@ class WalletActivity : BaseActivity() {
             popup.show()
         }
 
-        if (true) {
+        if (!DataStore.introShown) {
             recycler.doOnLayout {
                 var x = displayMetrics.widthPixels - 45 * displayMetrics.density
                 var y = displayMetrics.heightPixels - 45 * displayMetrics.density

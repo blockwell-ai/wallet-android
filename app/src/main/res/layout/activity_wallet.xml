@@ -128,7 +128,7 @@
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/fab_margin"
             app:srcCompat="@drawable/ic_qrcode"
-            android:tint="@color/primaryText" />
+            app:tint="@color/primaryText" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/shortcuts_fab"
@@ -140,6 +140,6 @@
             android:layout_marginBottom="90dp"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_list"
-            android:tint="@color/primaryText" />
+            app:tint="@color/primaryText" />
     </RelativeLayout>
 </RelativeLayout>

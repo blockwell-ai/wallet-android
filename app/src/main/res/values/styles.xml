@@ -4,6 +4,7 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primary</item>
+        <item name="colorSecondary">@color/primary</item>
         <item name="android:textColor">@color/colorText</item>
         <item name="android:textColorSecondary">@color/colorText</item>
         <item name="android:navigationBarColor">@color/toolbar</item>
@@ -13,6 +14,7 @@
         <item name="windowNoTitle">true</item>
         <item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>
         <item name="textInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
+        <item name="autoCompleteTextViewStyle">@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">

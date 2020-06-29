@@ -61,8 +61,7 @@
                             android:layout_height="wrap_content"
                             android:inputType="textEmailAddress"
                             android:maxLines="1"
-                            android:singleLine="true"
-                            style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"/>
+                            android:singleLine="true"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
 

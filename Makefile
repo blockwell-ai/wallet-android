@@ -33,4 +33,4 @@ blockwell:
 		-Pcolor.link=#004fff \
 		-Pcolor.success=#558B2F \
 		-Pcolor.error=#CDAF3823 \
-		-Pstring.app_name="Blockwell-QR"
+		-Pstring.app_name="Blockwell Wallet"
