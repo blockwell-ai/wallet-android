@@ -3,6 +3,7 @@ package ai.blockwell.qrdemo.qr
 import ai.blockwell.qrdemo.R
 import ai.blockwell.qrdemo.ScanQrActivity
 import android.os.Bundle
+import com.github.ajalt.timberkt.Timber
 import com.google.zxing.Result
 import kotlinx.android.synthetic.main.activity_scan_qr.*
 import org.jetbrains.anko.longToast
@@ -19,10 +20,11 @@ class TransactionQrActivity : ScanQrActivity() {
 
     override fun decodeCallback(result: Result) {
         val url = URL(result.text)
-
+        Timber.i { "Scanned URL: $url" }
         if ((url.protocol == "http" || url.protocol == "https")
-                && url.host == "qr.blockwell.ai"
-                ) {
+                && (url.host == "qr.blockwell.ai"
+                        || url.host == "app.blockwell.ai")
+        ) {
             startActivity<TxActivity>("url" to result.text)
             finish()
         } else {

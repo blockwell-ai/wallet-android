@@ -67,7 +67,7 @@ class SuggestionsActivity : BaseSuggestionsActivity() {
             }
 
             result.fold({
-                val url = "https://qr.blockwell.ai/${it.shortcode}"
+                val url = "https://app.blockwell.ai/${it.shortcode}"
                 startActivity<TxActivity>("url" to url, "suggestion" to suggestion)
             }, {
                 val message = it.message
@@ -85,7 +85,7 @@ class SuggestionsActivity : BaseSuggestionsActivity() {
             val result = votingModel.getCreateSuggestionCode(contractId)
 
             result.fold({
-                val url = "https://qr.blockwell.ai/${it.shortcode}"
+                val url = "https://app.blockwell.ai/${it.shortcode}"
                 startActivity<TxActivity>("url" to url)
             }, {
                 val message = it.message
