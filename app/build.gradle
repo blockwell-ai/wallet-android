@@ -59,8 +59,8 @@ android {
             }
         }
         debug {
-            //buildConfigField("String", "API_BASEURL", "\"http://10.0.0.2:3000\"")
-            buildConfigField("String", "API_BASEURL", "\"https://api.blockwell.ai\"")
+            buildConfigField("String", "API_BASEURL", "\"http://10.0.0.2:3000\"")
+            //buildConfigField("String", "API_BASEURL", "\"https://api.blockwell.ai\"")
             versionNameSuffix "-debug"
             if (config['APP_ID'] != "base") {
                 applicationIdSuffix "." + config['APP_ID']

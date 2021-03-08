@@ -13,7 +13,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="24dp"
-        android:textColor="@color/primaryText"
+        android:textColor="@color/overlayText"
         android:text="@string/suggestions_viewer"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:layout_alignParentTop="true"/>
@@ -25,7 +25,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:textColor="@color/primaryText"
+        android:textColor="@color/overlayText"
         android:text="@string/suggestions_viewer_description"
         android:layout_below="@+id/title"/>
 

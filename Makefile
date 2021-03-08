@@ -25,6 +25,7 @@ blockwell:
 		-Pcolor.primary=#004fff \
 		-Pcolor.primaryText=#ffffff \
 		-Pcolor.primaryTextGreyed=#d8d8d8 \
+		-Pcolor.overlayText=#ffffff \
 		-Pcolor.contentBackground=#ffffff \
 		-Pcolor.colorText=#797979 \
 		-Pcolor.colorTextEmphasis=#000000 \
