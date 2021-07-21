@@ -62,7 +62,10 @@ class TxSuccessActivity : BaseActivity() {
             }
         }
 
-        update(intent.getParcelableExtra("tx"))
+        val tx = intent.getParcelableExtra<TxResponse>("tx")
+        if (tx != null) {
+            update(tx)
+        }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }

@@ -16,7 +16,10 @@ class WebViewActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         title = intent.getStringExtra("title")
-        webview.loadUrl(intent.getStringExtra("url"))
+        val url = intent.getStringExtra("url")
+        if (url != null) {
+            webview.loadUrl(url)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
